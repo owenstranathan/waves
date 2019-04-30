@@ -8,15 +8,15 @@
 #include "wave.hpp"
 
 using namespace std;
-using namespace wabisoft;
+using namespace wabi;
 using namespace sf;
 
-int SCREEN_MULT = 80;
-// int SCREEN_HEIGHT = 9 * SCREEN_MULT;
-// int SCREEN_WIDTH = 16 * SCREEN_MULT;
-int SCREEN_HEIGHT;
-int SCREEN_WIDTH;
-
+int SCREEN_MULT = 40;
+int SCREEN_HEIGHT = 9 * SCREEN_MULT;
+int SCREEN_WIDTH = 16 * SCREEN_MULT;
+// int SCREEN_HEIGHT;
+// int SCREEN_WIDTH;
+;
 chrono::duration<float> deltaTime;
 
 int main()
@@ -42,8 +42,8 @@ int main()
 	float fixedTimeStep = 0.02f;
 	float timeSinceLastFixedUpdate = 0.0f;
 
-	Wave wave;
-	wave.transform.scale(100, 100);
+	Wave wave(1000, 1000);
+	wave.transform.translate(0, 100);
 	
 	// game loop
     while (window.isOpen())
@@ -65,15 +65,17 @@ int main()
 
 		if (timeSinceLastFixedUpdate >= fixedTimeStep)
 			timeSinceLastFixedUpdate = 0.0f;
+			wave.fixedUpdate();
 
 		auto avg = frames / time.count();
-		if (frames > 100) {
+		if (time.count() > 1) {
 			frames = 0;
 			time = duration(0);
 		}
 
         infostream << "FrameRate: " <<  avg << endl;
 		infostream << "deltaTime: " << deltaTime.count() << endl;
+		infostream << "t        : " << wave.time << endl;
 		infoText.setString(infostream.str());
 		infoText.setPosition(3, 3);
 		infoText.setColor(sf::Color::Magenta);

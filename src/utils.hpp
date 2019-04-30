@@ -16,7 +16,7 @@ typedef std::chrono::time_point<std::chrono::system_clock> timepoint;
 typedef std::chrono::duration<float> duration;
 
 
-namespace wabisoft
+namespace wabi
 {
 	inline timepoint keepTime(timepoint start) {
 		// this must be inline because deltaTime is externally defined (this should probably be wrapped in a static class
@@ -86,7 +86,12 @@ namespace wabisoft
 	    return sf::Vector2<T>(blah(), blah());
 	}	
 
-} // namespace wabisoft
+	template <typename T>
+	sf::Vector2<T> brainToScreenSpace(const sf::Vector2<T> in) {
+		return sf::Vector2<T>(in.x, (SCREEN_HEIGHT - in.y) - 1);
+	}
+
+} // namespace wabi
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const sf::Vector3<T> &v)

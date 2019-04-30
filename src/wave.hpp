@@ -9,16 +9,24 @@
 
 class Wave {
 public:
-	Wave() : t(0) {}
-	Wave(int time) : t(time), transform() {}
-	Wave(float time) : t(time), transform() {}
+	Wave(float m, float s = 10) :magnitude(m), size(s), time(-12), transform(), vertices(new sf::Vector2f[size]) { }
 
-	float height(float x); // this can be a free function in the future, or a function pointer a caller provides
-	std::vector<sf::Vector2f> verticies();
+	~Wave() {
+		delete[] vertices;
+	}
+
+	float height(float x); // this can be a free function in the future, or a function pointer a caller provides	
+	void updateVertices();
 	void draw(sf::RenderTarget & rt);
+	void fixedUpdate();
+	sf::Vector2f max();
 
 	sf::Transform transform;
-	float t;
+	sf::Vector2f position;
+	float time;
+	float size;
+	float magnitude;
+	sf::Vector2f * vertices;
 };
 
 #endif // !WAVE_HPP
