@@ -8,43 +8,45 @@
 
 float Wave::height(float x) {
 	// e^{-0.05t^2}sin(pi * x)\ 
-	return magnitude * std::pow(M_E, -0.05 * time * time) * std::pow(std::sinf((1.0f/magnitude) * M_PI * x), 2);
+	float returnValue = 0.0f;
+	for (auto&& f : components) {
+		returnValue += f(x);
+	}
+	return returnValue;
+	// return magnitude * std::pow(M_E, -0.05 * time * time) * std::pow(std::sinf((1.0f/magnitude) * M_PI * x - time), 2);
 }
 
 void Wave::updateVertices(){
-	for (float x = 0; x < magnitude; x += (magnitude/size)) {
-		int index = (x*size) / magnitude;
-		vertices[index].x = x;
-		vertices[index].y = height(x);
+	for (float x = 0; x < SCREEN_WIDTH; x += (SCREEN_WIDTH/size)) {
+		int index = (x*size) / SCREEN_WIDTH;
+		// vertices[index] = transform.transformPoint(sf::Vector2f(x, height(x)));
+		vertices[index] = sf::Vector2f(x, height(x));
 	}
-}
-
-sf::Vector2f Wave::max() {
-	return sf::Vector2f();
 }
 
 void Wave::draw(sf::RenderTarget & rt) {
 	sf::CircleShape point(3);
 	point.setFillColor(sf::Color::Black);
-	// std::transform(verts.begin(), verts.end(), [this](sf::Vector2f p) -> sf::Vector2f { return transform.transformPoint(p); });
 	for (int i = 0; i < size; i++) {
-		// sf::Vector2f newPos = transform.transformPoint(vertices[i]);
-		// point.setPosition(newPos);
-
-		point.setPosition(wabi::brainToScreenSpace(transform.transformPoint(vertices[i])));
+		point.setPosition(wabi::brainToScreenSpace(vertices[i]));
 		rt.draw(point);
 	}
+	point.setFillColor(sf::Color::Red);
+	sf::Vector2f pos = vertices[(int)size / 2];
+	point.setPosition(wabi::brainToScreenSpace(sf::Vector2f(pos.x, pos.y - magnitude / 2)));
+	rt.draw(point);	
 }
 
 void Wave::fixedUpdate() {
 	updateVertices();
-	time += deltaTime.count() * 5;
-	if (time < 0) {
-	 	time += deltaTime.count() * 5;
-	}
-	else {
-	 	time += deltaTime.count() * 5;
-	}
+	wabi::Time t;
+	time += t.deltaTime.count();
+	// if (time < 0) {
+	//  	time += t.deltaTime.count() * 20;
+	// }
+	// else {
+	//  	time += t.deltaTime.count();
+	// }
 	//transform.translate(1, 1);
-	transform.translate(5, 0);
+	// transform.translate(5.0f, 0);
 }

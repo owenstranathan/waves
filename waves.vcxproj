@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\wave.cpp" />
   </ItemGroup>
   <ItemGroup>

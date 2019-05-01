@@ -8,22 +8,37 @@
 #include <chrono>
 #include <SFML/Graphics.hpp>
 
+
 extern int SCREEN_HEIGHT;
 extern int SCREEN_WIDTH;
-extern std::chrono::duration<float> deltaTime; // just make sure you call keepTime everyframe
-
-typedef std::chrono::time_point<std::chrono::system_clock> timepoint;
-typedef std::chrono::duration<float> duration;
+// extern std::chrono::duration<float> deltaTime; // just make sure you call keepTime everyframe
 
 
 namespace wabi
 {
-	inline timepoint keepTime(timepoint start) {
-		// this must be inline because deltaTime is externally defined (this should probably be wrapped in a static class
-		auto end = std::chrono::system_clock::now();
-		deltaTime = end - start;
-		return end;
-	}
+
+	typedef std::chrono::time_point<std::chrono::system_clock> timepoint;
+	typedef std::chrono::duration<float> duration;
+
+	class Time {
+	public:
+		static duration deltaTime;
+		static duration totalTime;
+		static timepoint start;
+		static timepoint end;
+
+		Time() { }
+		void keepTime();
+		void reset();
+		
+	};
+
+	// inline timepoint keepTime(timepoint start) {
+	// 	// this must be inline because deltaTime is externally defined (this should probably be wrapped in a static class
+	// 	auto end = std::chrono::system_clock::now();
+	// 	deltaTime = end - start;
+	// 	return end;
+	// }
 	
 
 	template <typename T>
@@ -88,9 +103,13 @@ namespace wabi
 
 	template <typename T>
 	sf::Vector2<T> brainToScreenSpace(const sf::Vector2<T> in) {
-		return sf::Vector2<T>(in.x, (SCREEN_HEIGHT - in.y) - 1);
+		return sf::Vector2<T>(in.x, (SCREEN_HEIGHT - in.y));
 	}
 
+	template <typename T>
+	sf::Vector2<T> screenToBrainSpace(const sf::Vector2<T> in) {
+		return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
+	}
 } // namespace wabi
 
 template <typename T>
