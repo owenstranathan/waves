@@ -1,4 +1,3 @@
-#define _USE_MATH_DEFINES
 
 #include <iostream>
 #include <string>
@@ -8,6 +7,7 @@
 
 #include "utils.hpp"
 #include "wave.hpp"
+#include "graphics.hpp"
 
 
 int SCREEN_MULT = 100;
@@ -15,7 +15,6 @@ int SCREEN_HEIGHT = 9 * SCREEN_MULT;
 int SCREEN_WIDTH = 16 * SCREEN_MULT;
 // int SCREEN_HEIGHT;
 // int SCREEN_WIDTH;
-;
 // chrono::duration<float> deltaTime;
 
 int main()
@@ -41,10 +40,13 @@ int main()
 	float timeSinceLastFixedUpdate = 0.0f;
 
 	Wave wave(1000, 1000);
-	auto wavyboy = [wave](float x) -> float {
+	auto wavyboy = [](float x, Wave& wave) -> float {
 		return wave.magnitude* std::pow(M_E, -0.05 * wave.time * wave.time) * std::pow(std::sinf((1.0f / wave.magnitude) * M_PI * x - wave.time), 2);
 	};
-	wave.components.push_back(WavyBoyDefault(&wave));
+	auto wavyboy2 = [](float x, Wave & wave) -> float {
+		return 0;
+	};
+	wave.components.push_back(wavyboy);
 	// game loop
     while (window.isOpen())
     {
@@ -87,7 +89,7 @@ int main()
 		infoText.setPosition(3, 3);
 		infoText.setColor(sf::Color::Magenta);
 		window.draw(infoText);
-		wave.draw(window);
+		window << wave;
         window.display();
     }
     return 0;

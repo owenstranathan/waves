@@ -1,8 +1,7 @@
-#define _USE_MATH_DEFINES
 
-#include <cmath>
 #include <iostream>
 
+#include "utils.hpp"
 #include "wave.hpp"
 
 
@@ -10,7 +9,7 @@ float Wave::height(float x) {
 	// e^{-0.05t^2}sin(pi * x)\ 
 	float returnValue = 0.0f;
 	for (auto&& f : components) {
-		returnValue += f(x);
+		returnValue += f(x, *this);
 	}
 	return returnValue;
 	// return magnitude * std::pow(M_E, -0.05 * time * time) * std::pow(std::sinf((1.0f/magnitude) * M_PI * x - time), 2);
@@ -22,19 +21,6 @@ void Wave::updateVertices(){
 		// vertices[index] = transform.transformPoint(sf::Vector2f(x, height(x)));
 		vertices[index] = sf::Vector2f(x, height(x));
 	}
-}
-
-void Wave::draw(sf::RenderTarget & rt) {
-	sf::CircleShape point(3);
-	point.setFillColor(sf::Color::Black);
-	for (int i = 0; i < size; i++) {
-		point.setPosition(wabi::brainToScreenSpace(vertices[i]));
-		rt.draw(point);
-	}
-	point.setFillColor(sf::Color::Red);
-	sf::Vector2f pos = vertices[(int)size / 2];
-	point.setPosition(wabi::brainToScreenSpace(sf::Vector2f(pos.x, pos.y - magnitude / 2)));
-	rt.draw(point);	
 }
 
 void Wave::fixedUpdate() {

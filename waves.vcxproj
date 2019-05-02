@@ -138,11 +138,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\rock.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics.hpp" />
+    <ClInclude Include="src\rock.hpp" />
     <ClInclude Include="src\utils.hpp" />
     <ClInclude Include="src\wave.hpp" />
   </ItemGroup>
