@@ -12,14 +12,7 @@
 // return wave->magnitude* std::pow(M_E, -0.05 * wave->time * wave->time) * std::pow(std::sinf((1.0f / wave->magnitude) * M_PI * x - wave->time), 2);
 class Wave {
 public:
-	Wave(float m,float s = 10) : 
-		magnitude(m), 
-		size(s), 
-		time(-12), 
-		transform(), 
-		vertices(new sf::Vector2f[size]), 
-		components({ [](float x, Wave & w) -> float { return 10 * std::sinf(M_PI * x * 0.01f - w.time) + 100; } }) {
-	}
+	Wave(float m,float s = 10) : magnitude(m),  size(s), time(-12), transform(), vertices(new sf::Vector2f[size]){ }
 
 	~Wave() {
 		delete[] vertices;
@@ -35,7 +28,7 @@ public:
 	float size;
 	float magnitude;
 	sf::Vector2f * vertices;
-	std::vector<std::function<float(float, Wave&)>> components;
+	// std::vector<std::function<float(float, Wave&)>> components;
 };
 
 #endif // !WAVE_HPP

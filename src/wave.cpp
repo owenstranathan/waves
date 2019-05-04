@@ -7,11 +7,14 @@
 
 float Wave::height(float x) {
 	// e^{-0.05t^2}sin(pi * x)\ 
-	float returnValue = 0.0f;
-	for (auto&& f : components) {
-		returnValue += f(x, *this);
-	}
-	return returnValue;
+	// float returnValue = 0.0f;
+	// for (auto&& f : components) {
+	// 	returnValue += f(x, *this);
+	// }
+	// return returnValue;
+	// return magnitude * std::pow(M_E, (-1.0f / magnitude * magnitude) * std::pow(x - time, 2)) + 200; 
+	return magnitude * std::pow(M_E, (-1.0f / (magnitude*magnitude)) * std::pow(x - time, 2)) + 200; 
+	// return std::pow(M_E, -1.0f * std::pow(x - time, 2)); 
 	// return magnitude * std::pow(M_E, -0.05 * time * time) * std::pow(std::sinf((1.0f/magnitude) * M_PI * x - time), 2);
 }
 
@@ -26,7 +29,7 @@ void Wave::updateVertices(){
 void Wave::fixedUpdate() {
 	updateVertices();
 	wabi::Time t;
-	time += t.deltaTime.count();
+	time += t.deltaTime.count() * 100;
 	// if (time < 0) {
 	//  	time += t.deltaTime.count() * 20;
 	// }

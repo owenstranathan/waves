@@ -32,6 +32,7 @@ int main()
 	infoText.setFont(font);
 	std::stringstream infostream;
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
+    // sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::Default, settings);
     window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(100);
 
@@ -39,14 +40,16 @@ int main()
 	float fixedTimeStep = 0.02f;
 	float timeSinceLastFixedUpdate = 0.0f;
 
-	Wave wave(1000, 1000);
+	Wave wave(500, 1000);
 	auto wavyboy = [](float x, Wave& wave) -> float {
 		return wave.magnitude* std::pow(M_E, -0.05 * wave.time * wave.time) * std::pow(std::sinf((1.0f / wave.magnitude) * M_PI * x - wave.time), 2);
 	};
 	auto wavyboy2 = [](float x, Wave & wave) -> float {
-		return 0;
+		return 50 * std::pow(std::sinf((1.0f / (float)(1/50)) * M_PI * x - wave.time + (float)(M_PI/2)), 2);
 	};
-	wave.components.push_back(wavyboy);
+	wave.transform.scale(1000, 1000);
+	// wave.components.push_back(wavyboy);
+	// wave.components.push_back(wavyboy2);
 	// game loop
     while (window.isOpen())
     {
