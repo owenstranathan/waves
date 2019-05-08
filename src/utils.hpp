@@ -14,7 +14,7 @@
 
 extern int SCREEN_HEIGHT;
 extern int SCREEN_WIDTH;
-// extern std::chrono::duration<float> deltaTime; // just make sure you call keepTime everyframe
+extern const float ALMOST_ZERO;
 
 
 namespace wabi
@@ -35,13 +35,6 @@ namespace wabi
 		void reset();
 		
 	};
-
-	// inline timepoint keepTime(timepoint start) {
-	// 	// this must be inline because deltaTime is externally defined (this should probably be wrapped in a static class
-	// 	auto end = std::chrono::system_clock::now();
-	// 	deltaTime = end - start;
-	// 	return end;
-	// }
 	
 
 	template <typename T>

@@ -145,8 +145,11 @@
     <ClCompile Include="src\wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\collidable.hpp" />
+    <ClInclude Include="src\everybodyinthepool.hpp" />
     <ClInclude Include="src\graphics.hpp" />
     <ClInclude Include="src\rock.hpp" />
+    <ClInclude Include="src\sea.hpp" />
     <ClInclude Include="src\utils.hpp" />
     <ClInclude Include="src\wave.hpp" />
   </ItemGroup>
