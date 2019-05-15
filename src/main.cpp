@@ -39,8 +39,7 @@ int main()
 	float timeSinceLastFixedUpdate = 0.0f;
 	
 	Sea sea;
-	Wave wave(&sea, SCREEN_WIDTH/2, 100, -12, 1000);
-	sea.waves.push_back(&wave);
+	sea.createWave(SCREEN_WIDTH / 2, 100);
 	
 	// game loop
     while (window.isOpen())
@@ -59,9 +58,10 @@ int main()
         }
         window.clear(sf::Color::White);
 
-		if (timeSinceLastFixedUpdate >= fixedTimeStep)
+		if (timeSinceLastFixedUpdate >= fixedTimeStep) {
 			timeSinceLastFixedUpdate = 0.0f;
-			wave.fixedUpdate();
+			sea.fixedUpdate();
+		}
 
 		auto avg = frames / time.totalTime.count();
 		if (time.totalTime.count() > 1) {
@@ -69,16 +69,9 @@ int main()
 			time.reset();
 		}
 
-		sf::Vector2f positions[3] = { sf::Vector2f(1, 1), sf::Vector2f((float)SCREEN_WIDTH/2, (float)SCREEN_HEIGHT/2), sf::Vector2f(SCREEN_WIDTH-1, SCREEN_HEIGHT-1)};
-		sf::CircleShape circle(2);
-		for (auto i = 0; i < 3; i++) {
-			circle.setPosition(wabi::brainToScreenSpace(positions[i]));
-			circle.setFillColor(sf::Color::Magenta);
-			window.draw(circle);
-		}
         infostream << "FrameRate    : " << avg << std::endl;
 		infostream << "deltaTime    : " << time.deltaTime.count() << std::endl;
-		infostream << "t            : " << wave.t << std::endl;
+		infostream << "t            : " << sea.waves.front()->t << std::endl;
 		infoText.setString(infostream.str());
 		infoText.setPosition(3, 3);
 		infoText.setColor(sf::Color::Magenta);

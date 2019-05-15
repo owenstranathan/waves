@@ -141,6 +141,7 @@
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\rock.cpp" />
+    <ClCompile Include="src\sea.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\wave.cpp" />
   </ItemGroup>

@@ -9,11 +9,14 @@ class Wave;
 
 class Sea {
 public:
-	Sea() : level(200), waves() {
+	Sea();
 
-	}
+	void createWave(float position, float magnitude);
+	void fixedUpdate();
+	Wave* waveAtX(float x);
 
 	float level;
+// private:
 	std::vector<Wave*> waves;
 };
 
