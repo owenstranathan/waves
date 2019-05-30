@@ -20,17 +20,7 @@ float Wave::height(float x) {
 	return magnitude * std::pow(M_E, dc * t * t) * std::pow(std::sinf((1.0f / magnitude) * M_PI * x), 2) + sea->level;
 }
 
-void Wave::updateVertices(){
-	// float step = magnitude / num_vertices;
-	// auto r = rect();
-	// for (float x = 0; x < magnitude; x += step) {
-	// 	int index = (x * num_vertices) / magnitude;
-	// 	vertices[index] = sf::Vector2f(x + r.left, height(x)+sea->level);
-	// }
-}
-
 void Wave::fixedUpdate() {
-	// updateVertices();
 	t += time.deltaTime.count();
 	position.x += time.deltaTime.count() * 50;
 	// if (time < 0) {

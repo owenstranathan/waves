@@ -21,7 +21,6 @@ public:
 	~Wave();
 
 	float height(float x); // this can be a free function in the future, or a function pointer a caller provides	
-	void updateVertices();
 	void fixedUpdate();
 	sf::Rect<float> rect();
 	float tomd();

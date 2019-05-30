@@ -31,8 +31,8 @@ int main()
 	std::stringstream infostream;
     // sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::Default, settings);
-    window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(100);
+    // window.setVerticalSyncEnabled(true);
+	// window.setFramerateLimit(100);
 
     int frames = 0;
 	float fixedTimeStep = 0.02f;
