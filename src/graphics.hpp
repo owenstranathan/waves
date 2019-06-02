@@ -6,8 +6,7 @@
 #include "rock.hpp"
 #include "sea.hpp"
 
-const sf::Color SeaColor = sf::Color::Blue;
-const sf::Color WaveColor = SeaColor;
+#define SEA_COLOR sf::Color::Cyan
 
 sf::RenderTarget& operator<<(sf::RenderTarget &rt, Sea& sea);   // draw a sea on a RenderTarget
 sf::RenderTarget& operator<<(sf::RenderTarget &rt,  Wave& wave);  // draw a wave on a RenderTarget

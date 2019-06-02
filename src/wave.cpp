@@ -7,41 +7,48 @@
 
 // statics
 wabi::Time Wave::time = wabi::Time();
+int Wave::_idSeed = 0;
 
-Wave::Wave(Sea const * s, float p, float m, float time) : sea(s), position(p, sea->level), magnitude(m), t(time) { }
-
+Wave::Wave(Sea * s, float x, float a) : sea(s), startX(x), amplitude(a), id(++_idSeed), position(x, sea->level) {}
 Wave::~Wave() { }
 
 float Wave::height(float x) {
-	// float mag_recip = 1.0f / magnitude;
-	// return (magnitude/ ( time + 1)) * std::pow(M_E, -1.0f * std::pow(mag_recip * x - time, 2)) + 200; 
-	// return magnitude * std::pow(M_E, (-1.0f / (magnitude*magnitude)) * std::pow(x - time, 2)) + 200; 
+	// cool guassian
+	return amplitude * b * std::pow(M_E, - std::pow(width * (x - position.x), 2));
+}
 
-	return magnitude * std::pow(M_E, dc * t * t) * std::pow(std::sinf((1.0f / magnitude) * M_PI * x), 2) + sea->level;
+float Wave::slope(float x) {
+	// derivative of height
+	return height(x) * (-2 * width * (x - position.x) * width);
 }
 
 void Wave::fixedUpdate() {
-	t += time.deltaTime.count();
-	position.x += time.deltaTime.count() * 50;
-	// if (time < 0) {
-	//  	time += t.deltaTime.count() * 20;
-	// }
-	// else {
-	//  	time += t.deltaTime.count();
-	// }
-	//transform.translate(1, 1);
-	// transform.translate(5.0f, 0);
+	static float sign = 5.f;
+	auto dt = time.deltaTime.count();
+	t += dt * 50;
+	position.x = startX + t;
+	if (b >= 1.f) {
+		sign = -0.5f;
+	} else if (b <= 0.f && sign <= 0) {
+		sign = 0;
+		b = 0;
+	}
+	b = b + sign * dt;
+}
+
+float Wave::left() {
+	return position.x - 2.5f * (1 / width);
+}
+
+float Wave::right() {
+	return position.x + 2.5f * (1 / width);
 }
 
 sf::Rect<float> Wave::rect() {
-	float left = position.x - magnitude;
 	float h = height(position.x);
 	float top = position.y + h;
-	return sf::Rect<float>(left, top, magnitude, h);
+	return sf::Rect<float>(left(), top, right() - left(), h);
 }
 
-float Wave::tomd() { // time of maximal decay
-	// t = sqrt((1/decayCoeff)*ln(ALMOST_ZERO))
-	return std::sqrt((1.0f / dc) * std::logf(ALMOST_ZERO));
-}
+
 

@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\physicsbody.cpp" />
     <ClCompile Include="src\rock.cpp" />
     <ClCompile Include="src\sea.cpp" />
     <ClCompile Include="src\utils.cpp" />
@@ -147,8 +148,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\collidable.hpp" />
-    <ClInclude Include="src\everybodyinthepool.hpp" />
+    <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\graphics.hpp" />
+    <ClInclude Include="src\gravity.hpp" />
+    <ClInclude Include="src\physicsbody.hpp" />
     <ClInclude Include="src\rock.hpp" />
     <ClInclude Include="src\sea.hpp" />
     <ClInclude Include="src\utils.hpp" />

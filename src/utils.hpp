@@ -9,6 +9,7 @@
 #include <chrono>
 #include <functional>
 #include <chrono>
+#include <list>
 #include <SFML/Graphics.hpp>
 
 
@@ -61,6 +62,13 @@ namespace wabi
 		);
 	}
 
+	template <typename T, typename Pred>
+	typename std::list<T>::iterator insert_sorted(std::list<T> &v, T item, Pred predicate) {
+		return v.insert(
+			std::upper_bound(v.begin(), v.end(), item, predicate),
+			item
+		);
+	}
 
 	template <typename T>
 	T squareMagnitude(const sf::Vector2<T> &v)
@@ -106,7 +114,7 @@ namespace wabi
 	sf::Vector2<T> screenToBrainSpace(const sf::Vector2<T> in) {
 		return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
 	}
-
+	
 } // namespace wabi
 
 template <typename T>
