@@ -12,15 +12,11 @@ public:
 	Gravity() {}
 	~Gravity() {}
 
-	inline void apply(PhysicsBody& pb) {
-		pb.acceleration += sf::Vector2f(0, constant * time.deltaTime.count());
+	inline void apply(PhysicsBody& pb, wabi::duration deltaTime) {
+		pb.velocity += sf::Vector2f(0, constant * deltaTime.count());
 	}
 
 	const float constant = -9.8f;
-
-	static wabi::Time time;
 };
-
-wabi::Time Gravity::time = wabi::Time();
 
 #endif // !GRAVITY_HPP

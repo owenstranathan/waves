@@ -17,15 +17,6 @@ int SCREEN_HEIGHT = 9 * SCREEN_MULT;
 int SCREEN_WIDTH = 16 * SCREEN_MULT;
 const float ALMOST_ZERO = 0.0001; // close enough
 
-void blah(Sea& sea) {
-	static bool done = false;
-	if (!done) {
-		sea.createWave(SCREEN_WIDTH / 4, 100);
-		done = true;
-	}
-}
-
-
 int main()
 {
 	wabi::Time time;
@@ -46,8 +37,8 @@ int main()
 	window.setFramerateLimit(100);
 
     int frames = 0;
-	float fixedTimeStep = 0.02f;
-	float timeSinceLastFixedUpdate = 0.0f;
+	float fixedTimeStep = 0.008f;
+	wabi::duration timeSinceLastFixedUpdate = wabi::duration(0);
 	
 	Sea sea;
 	sea.createWave((SCREEN_WIDTH / 2) + 100, 50);
@@ -62,7 +53,7 @@ int main()
 		infostream.str(std::string());
 		time.keepTime();
 		frames++;
-	    timeSinceLastFixedUpdate += time.deltaTime.count();
+	    timeSinceLastFixedUpdate += time.deltaTime;
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
         while (window.pollEvent(event))
@@ -79,16 +70,15 @@ int main()
         }
         window.clear(sf::Color::Black);
 
-		if (timeSinceLastFixedUpdate >= fixedTimeStep) {
-			timeSinceLastFixedUpdate = 0.0f;
+		if (timeSinceLastFixedUpdate.count() >= fixedTimeStep) {
 			sea.fixedUpdate();
 			// TODO: make an object pool/manager that can do this. (just like a sea is sort of a wave pool)
 			// Then again there will probably never be too many rocks in a game once there are rules and things.
 			// w/e we'll figure it out
 			for (auto it = rocks.begin(); it != rocks.end(); ++it) {
 				auto rock = *it;
-				gravity.apply(*rock);
-				rock->fixedUpdate();
+				gravity.apply(*rock, timeSinceLastFixedUpdate);
+				rock->fixedUpdate(timeSinceLastFixedUpdate);
 				if (rock->position.y > SCREEN_HEIGHT || rock->position.x > SCREEN_WIDTH || rock->position.x < 0 || rock->position.y < 0) {
 					it = rocks.erase(it);
 					if (it == rocks.end())
@@ -97,9 +87,7 @@ int main()
 					delete rock;
 				}
 			}
-		}
-		if (time.totalTime.count() > 1) {
-		// 	blah(sea);
+			timeSinceLastFixedUpdate = wabi::duration(0);
 		}
 
         infostream << "FrameRate    : " << 1 / time.deltaTime.count() << std::endl;

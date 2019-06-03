@@ -2,11 +2,12 @@
 #define GAME_HPP
 
 #include <SFML/System.hpp>
+#include "utils.hpp"
 
 class GameObject {
 public:
-	virtual void update() = 0;
-	virtual void fixedUpdate() = 0;
+	virtual void update(wabi::duration deltaTime) {};
+	virtual void fixedUpdate(wabi::duration deltaTime) {};
 };
 
 

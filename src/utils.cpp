@@ -8,6 +8,7 @@ namespace wabi {
 	timepoint Time::start = timepoint();
 	timepoint Time::end = timepoint();
 
+
 	void Time::keepTime() {
 		if (start == timepoint())
 			start = end = std::chrono::system_clock::now();
@@ -17,6 +18,7 @@ namespace wabi {
 		start = end;
 		totalTime += deltaTime;
 	}
+
 
 	void Time::reset() {
 		totalTime = duration(0);
