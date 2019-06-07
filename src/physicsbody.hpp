@@ -1,18 +1,19 @@
 #ifndef PHYSICSBODY_HPP
 #define PHYSICSBODY_HPP
 
-#include <SFML/System.hpp>
-#include "collidable.hpp"
 #include "utils.hpp"
-#include "game.hpp"
+#include "prelude.hpp"
+#include "collidable.hpp"
 
-class PhysicsBody : public Collidable, public GameObject {
+
+class PhysicsBody : public Collidable {
 public:
 
 	PhysicsBody();
 	~PhysicsBody();
 
-	virtual void fixedUpdate(wabi::duration deltaTime);
+	virtual void accept(Visitor&);
+	virtual void update(wabi::duration deltaTime);
 
 	float mass;
 	sf::Vector2f position;

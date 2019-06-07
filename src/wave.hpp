@@ -6,27 +6,25 @@
 #include <vector>
 #include <math.h>
 
-// #include "everybodyinthepool.hpp"
+#include "prelude.hpp"
 #include "utils.hpp"
 #include "collidable.hpp"
-#include "sea.hpp"
 
+// TODO: make a wave management class (ObjectPool)
 
-class Sea;
-
-// return wave->magnitude* std::pow(M_E, -0.05 * wave->time * wave->time) * std::pow(std::sinf((1.0f / wave->magnitude) * M_PI * x - wave->time), 2);
-class Wave : Collidable {
+class Wave : public Collidable {
 public:
 	Wave(Sea *sea, float x, float a);
 	~Wave();
 
-	float height(float x); // this can be a free function in the future, or a function pointer a caller provides	
-	float slope(float x);
-	float left();
-	float right();
+	float height(float x) const; 
+	float slope(float x) const;
+	float left() const;
+	float right() const;
 
-	void fixedUpdate();
-	sf::Rect<float> rect();
+	virtual void accept(Visitor &);
+	virtual void update(wabi::duration deltaTime);
+	virtual sf::Rect<float> rect() const;
 
 
 	Sea *sea;
@@ -38,9 +36,6 @@ public:
 	float b = 0; // decay coefficient
 	int id;
 	
-
-	static wabi::Time time;
-
 private:
 	static int _idSeed;
 

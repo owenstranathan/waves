@@ -2,14 +2,23 @@
 #define GRAPHICS_HPP
 
 #include "utils.hpp"
-#include "wave.hpp"
-#include "rock.hpp"
-#include "sea.hpp"
+#include "prelude.hpp"
 
 #define SEA_COLOR sf::Color::Cyan
 
-sf::RenderTarget& operator<<(sf::RenderTarget &rt, Sea& sea);   // draw a sea on a RenderTarget
-sf::RenderTarget& operator<<(sf::RenderTarget &rt,  Wave& wave);  // draw a wave on a RenderTarget
-sf::RenderTarget& operator<<(sf::RenderTarget &rt, Rock& rock);   // draw a rock on a RenderTarget
+class Graphics {
+public:
+
+	static void init();
+	static void cleanUp();
+
+	static sf::Font * const font;
+};
+
+
+sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game);
+sf::RenderTarget& operator<<(sf::RenderTarget &rt, const Sea& sea);
+sf::RenderTarget& operator<<(sf::RenderTarget &rt,  const Wave& wave);
+sf::RenderTarget& operator<<(sf::RenderTarget &rt, const Rock& rock);
 
 #endif // !GRAPHICS_HPP

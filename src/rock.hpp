@@ -6,15 +6,15 @@
 
 static const float ROCK_MASS = 5.f;
 
+
 class Rock : public PhysicsBody {
 public:
 	Rock(float r): radius(r) {
 		mass = ROCK_MASS;
 	}
 
-	inline sf::Rect<float> rect() {
-		return sf::Rect<float>(position.x - radius, position.y + radius, radius, radius);
-	}
+	virtual void accept(Visitor&);
+	virtual sf::Rect<float> rect() const;
 	float radius;
 };
 

@@ -1,18 +1,31 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#pragma once
 
 #include <SFML/System.hpp>
+#include "prelude.hpp"
 #include "utils.hpp"
-
-class GameObject {
-public:
-	virtual void update(wabi::duration deltaTime) {};
-	virtual void fixedUpdate(wabi::duration deltaTime) {};
-};
+#include "collisionsystem.hpp"
+#include "gravity.hpp"
 
 
 class Game {
 	// TODO: something here.
+public:
+
+	Game(float);
+	~Game();
+
+	Sea* sea;
+	std::list<Wave*> waves;
+	std::list<Rock*> rocks;
+	bool over = false;
+	bool won = false;
+
+	CollisionSystem collisionSystem;
+	Gravity gravity;
+
+	wabi::Time time;
+
+	void update();
+	void handleEvent(sf::Event&);
 };
 
-#endif // !GAME_HPP

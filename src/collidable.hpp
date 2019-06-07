@@ -1,19 +1,11 @@
-#ifndef COLLIDABLE_HPP
-#define COLLIDABLE_HPP
-
-#include <vector>
+#pragma once
 
 #include "utils.hpp"
+#include "prelude.hpp"
+#include "gameobject.hpp"
 
-class Collidable {
+class Collidable : public GameObject{
 public:
-	virtual sf::Rect<float> rect() = 0;
+	virtual void accept(Visitor& v);
+	virtual sf::Rect<float> rect() const = 0;
 };
-
-class CollisionSystem {
-	// TODO: port SAP to here.
-};
-
-
-#endif
-

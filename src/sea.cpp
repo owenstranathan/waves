@@ -4,8 +4,9 @@
 #include "sea.hpp"
 #include "wave.hpp"
 #include "utils.hpp"
+#include "visitor.hpp"
 
-Sea::Sea() : level(200), waves() {}
+Sea::Sea(float l) : level(l) {}
 
 Sea::~Sea() {
 	for (auto&& w : waves) {
@@ -13,11 +14,13 @@ Sea::~Sea() {
 	}
 }
 
-void Sea::createWave(float position, float magnitude) {
+void Sea::accept(Visitor& v) { v.visit(this); }
+
+Wave* Sea::createWave(float position, float magnitude) {
 	Wave * wave = new Wave(this, position, magnitude);
 	wabi::insert_sorted(waves, wave, [](Wave * a, Wave * b)->bool {return a->rect().left < b->rect().left; });
+	return wave;
 }
-
 
 void Sea::cleanUpWaves() {
 	std::list<Wave*> remove;
@@ -32,13 +35,13 @@ void Sea::cleanUpWaves() {
 	}
 }
 
-void Sea::fixedUpdate() {
+void Sea::update(wabi::duration deltaTime) {
 	for (auto&& w : waves)
-		w->fixedUpdate();
+		w->update(deltaTime);
 	cleanUpWaves();
 }
 
-float Sea::slope(float x) {
+float Sea::slope(float x) const {
 	float m = 0;
 	for (auto&& w : waves) {
 		m += w->slope(x);
@@ -46,7 +49,7 @@ float Sea::slope(float x) {
 	return m;
 }
 
-float Sea::height(float x) {
+float Sea::height(float x) const {
 	float h = level;
 	// for (auto&& w : wavesAtX(x)) {
 	for (auto && w : waves) {
@@ -54,3 +57,8 @@ float Sea::height(float x) {
 	}
 	return h;
 }
+
+sf::Rect<float> Sea::rect() const {
+	return sf::FloatRect(0.f, level, SCREEN_WIDTH, level);
+}
+

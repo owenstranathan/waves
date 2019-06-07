@@ -3,18 +3,16 @@
 
 #include <vector>
 
-#include "physicsbody.hpp"
+#include "prelude.hpp"
 #include "utils.hpp"
 
 
 class Gravity {
 public:
-	Gravity() {}
-	~Gravity() {}
+	Gravity();
+	~Gravity();
 
-	inline void apply(PhysicsBody& pb, wabi::duration deltaTime) {
-		pb.velocity += sf::Vector2f(0, constant * deltaTime.count());
-	}
+	void apply(PhysicsBody& pb, wabi::duration deltaTime);
 
 	const float constant = -9.8f;
 };

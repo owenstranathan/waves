@@ -1,30 +1,27 @@
-#ifndef SEA_HPP
-#define SEA_HPP
+#pragma once
 
-// #include "everybodyinthepool.hpp"
 #include <list>
 
+#include "prelude.hpp"
 #include "utils.hpp"
-#include "wave.hpp"
+#include "collidable.hpp"
 
-class Wave; 
 
-// TODO: make the sea a wave pool. (i.e. cache wave instances on creation and clean up)
-class Sea {
+class Sea : public Collidable{
 public:
-	Sea();
+	Sea(float l);
 	~Sea();
 
-	void createWave(float position, float magnitude);
+	virtual void accept(Visitor&);
+	virtual void update(wabi::duration deltaTime);
+	Wave * createWave(float position, float magnitude);
 	void cleanUpWaves();
-	void fixedUpdate();
-	float height(float x);
-	float slope(float x);
+	float height(float x) const;
+	float slope(float x) const;
+	sf::Rect<float> rect() const;
 
-	float level;
-// private:
 	std::list<Wave*> waves;
+	float level;
 };
 
 
-#endif // !SEA_HPP

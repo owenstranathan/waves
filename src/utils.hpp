@@ -114,7 +114,7 @@ namespace wabi
 	sf::Vector2<T> screenToBrainSpace(const sf::Vector2<T> in) {
 		return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
 	}
-	
+
 } // namespace wabi
 
 template <typename T>
