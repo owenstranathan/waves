@@ -3,6 +3,7 @@
 
 #include "sea.hpp"
 #include "wave.hpp"
+#include "rock.hpp"
 #include "utils.hpp"
 #include "visitor.hpp"
 
@@ -14,7 +15,16 @@ Sea::~Sea() {
 	}
 }
 
-void Sea::accept(Visitor& v) { v.visit(this); }
+
+void* Sea::resolveCollision(Collidable*) {
+	return nullptr;
+}
+
+void* Sea::resolveCollision(Rock* rock) {
+	return rock->resolveCollision(this);
+}
+
+void * Sea::accept(Visitor& v) { return v.visit(this); }
 
 Wave* Sea::createWave(float position, float magnitude) {
 	Wave * wave = new Wave(this, position, magnitude);
@@ -61,4 +71,3 @@ float Sea::height(float x) const {
 sf::Rect<float> Sea::rect() const {
 	return sf::FloatRect(0.f, level, SCREEN_WIDTH, level);
 }
-

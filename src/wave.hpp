@@ -22,7 +22,8 @@ public:
 	float left() const;
 	float right() const;
 
-	virtual void accept(Visitor &);
+	virtual void* resolveCollision(Collidable*);
+	virtual void * accept(Visitor &);
 	virtual void update(wabi::duration deltaTime);
 	virtual sf::Rect<float> rect() const;
 
@@ -31,6 +32,7 @@ public:
 	sf::Vector2f position;
 	float startX;
 	float amplitude;
+	float sign = 5.f;
 	float t = 0;
 	float width = 0.01;
 	float b = 0; // decay coefficient

@@ -1,4 +1,4 @@
 #include "collidable.hpp"
 #include "visitor.hpp"
 
-void Collidable::accept(Visitor& v) { v.visit(this); }
+void* Collidable::accept(Visitor& v) { return v.visit(this); }

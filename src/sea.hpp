@@ -12,7 +12,10 @@ public:
 	Sea(float l);
 	~Sea();
 
-	virtual void accept(Visitor&);
+	virtual void* resolveCollision(Collidable*);
+	virtual void* resolveCollision(Rock*);
+
+	virtual void* accept(Visitor&);
 	virtual void update(wabi::duration deltaTime);
 	Wave * createWave(float position, float magnitude);
 	void cleanUpWaves();
@@ -22,6 +25,7 @@ public:
 
 	std::list<Wave*> waves;
 	float level;
+
 };
 
 

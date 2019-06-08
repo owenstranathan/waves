@@ -26,8 +26,9 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 	infostream << "deltaTime    : " << game.time.deltaTime.count() << std::endl;
 
 	infostream << "totalTime    : " << game.time.totalTime.count() << std::endl;
-	infostream << "# waves		: " << game.waves.size() << std::endl;
+	infostream << "# waves		: " << game.sea->waves.size() << std::endl;
 	infostream << "# rocks		: " << game.rocks.size() << std::endl;
+	infostream << "# colliders	: " << game.collisionSystem.colliders.size() << std::endl;
 	sf::Text infoText;
 	infoText.setFont(*Graphics::font);
 	infoText.setString(infostream.str());

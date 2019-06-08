@@ -1,5 +1,4 @@
-#ifndef PHYSICSBODY_HPP
-#define PHYSICSBODY_HPP
+#pragma once
 
 #include "utils.hpp"
 #include "prelude.hpp"
@@ -12,7 +11,6 @@ public:
 	PhysicsBody();
 	~PhysicsBody();
 
-	virtual void accept(Visitor&);
 	virtual void update(wabi::duration deltaTime);
 
 	float mass;
@@ -21,4 +19,3 @@ public:
 	sf::Vector2f acceleration;
 };
 
-#endif // !PHYSICSBODY_HPP

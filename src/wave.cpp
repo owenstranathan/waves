@@ -11,7 +11,11 @@ Wave::Wave(Sea * s, float x, float a) : sea(s), startX(x), amplitude(a), id(++_i
 
 Wave::~Wave() { }
 
-void Wave::accept(Visitor& v) { v.visit(this); }
+void* Wave::resolveCollision(Collidable*) {
+	return nullptr;
+}
+
+void * Wave::accept(Visitor& v) { return v.visit(this); }
 
 float Wave::height(float x) const {
 	// cool guassian
@@ -24,9 +28,9 @@ float Wave::slope(float x) const {
 }
 
 void Wave::update(wabi::duration deltaTime) {
-	static float sign = 5.f;
+	// static float sign = 5.f;
 	auto dt = deltaTime.count();
-	t += dt * 50;
+	t += dt * 100;
 	position.x = startX + t;
 	if (b >= 1.f) {
 		sign = -0.5f;
@@ -35,6 +39,7 @@ void Wave::update(wabi::duration deltaTime) {
 		b = 0;
 	}
 	b = b + sign * dt;
+	// width = width + sign * dt;
 }
 
 float Wave::left() const {

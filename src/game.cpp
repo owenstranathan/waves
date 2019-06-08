@@ -20,22 +20,39 @@ void Game::update() {
 		gravity.apply(*rock, time.deltaTime);
 		rock->update(time.deltaTime);
 		if (rock->position.y > SCREEN_HEIGHT || rock->position.x > SCREEN_WIDTH || rock->position.x < 0 || rock->position.y < 0) {
-			it = rocks.erase(it);
+			it = deleteRock(rock);
 			if (it == rocks.end())
 				break;
-			// it = rocks.(rock);
-			delete rock;
 		}
 	}
+	collisionSystem.resolveCollisions();
 }
 
+std::list<Rock*>::iterator Game::deleteRock(std::list<Rock*>::iterator it) {
+	auto rock = *it;
+	collisionSystem.removeCollider(rock);
+	it = rocks.erase(it);
+	delete rock;
+	return it;
+}
+
+std::list<Rock*>::iterator Game::deleteRock(Rock* rock) {
+	auto search = std::find(rocks.begin(), rocks.end(), rock);
+	return (search != rocks.end()) ? deleteRock(search) : rocks.end();
+}
+
+Rock* Game::createRock(sf::Vector2f position) {
+		auto rock = new Rock(50);
+		rock->position = position;
+		rocks.push_back(rock);
+		collisionSystem.addCollider(rock);
+		return rock;
+}
 
 void Game::handleEvent(sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed){
 		auto mousePosition = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
-		auto rock = new Rock(50);
-		rock->position = mousePosition;
-		rocks.push_back(rock);
+		createRock(mousePosition);
 	}
 
 }

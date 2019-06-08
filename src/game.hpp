@@ -14,6 +14,13 @@ public:
 	Game(float);
 	~Game();
 
+	void update();
+	void handleEvent(sf::Event&);
+
+	Rock* createRock(sf::Vector2f);
+	std::list<Rock*>::iterator deleteRock(std::list<Rock*>::iterator it);
+	std::list<Rock*>::iterator deleteRock(Rock *);
+
 	Sea* sea;
 	std::list<Wave*> waves;
 	std::list<Rock*> rocks;
@@ -25,7 +32,5 @@ public:
 
 	wabi::Time time;
 
-	void update();
-	void handleEvent(sf::Event&);
 };
 

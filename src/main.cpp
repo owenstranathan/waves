@@ -22,6 +22,7 @@ const float SEA_LEVEL = 200.f;
 
 int main()
 {
+	std::cout << (int)nullptr << std::endl;
 	// wabi::Time time;
     sf::ContextSettings settings;
     settings.antialiasingLevel = 100;

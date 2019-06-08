@@ -1,5 +1,4 @@
-#ifndef ROCK_HPP
-#define ROCK_HPP
+#pragma once
 
 #include "utils.hpp"
 #include "physicsbody.hpp"
@@ -13,9 +12,12 @@ public:
 		mass = ROCK_MASS;
 	}
 
-	virtual void accept(Visitor&);
+	virtual void* resolveCollision(Collidable*);
+	virtual void* resolveCollision(Sea*);
+	virtual void* resolveCollision(Rock*);
+	virtual void * accept(Visitor&);
 	virtual sf::Rect<float> rect() const;
 	float radius;
+	bool hitWater = false;
 };
 
-#endif // !ROCK_HPP

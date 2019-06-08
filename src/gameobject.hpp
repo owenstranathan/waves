@@ -4,7 +4,7 @@
 
 class GameObject {
 public:
-	virtual void accept(Visitor&);
+	virtual void * accept(Visitor&) = 0;
 	virtual void update(wabi::duration deltaTime) = 0;
 };
 
