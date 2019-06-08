@@ -14,7 +14,7 @@
 
 class Wave : public Collidable {
 public:
-	Wave(Sea *sea, float x, float a);
+	Wave(Game*, float, float);
 	~Wave();
 
 	float height(float x) const; 
@@ -28,14 +28,15 @@ public:
 	virtual sf::Rect<float> rect() const;
 
 
-	Sea *sea;
+	// Sea *sea;
+	Game* game;
 	sf::Vector2f position;
 	float startX;
 	float amplitude;
 	float sign = 5.f;
-	float t = 0;
+	float time = 0;
 	float width = 0.01;
-	float b = 0; // decay coefficient
+	float decay = 0; // decay coefficient
 	int id;
 	
 private:

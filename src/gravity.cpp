@@ -2,7 +2,7 @@
 #include "physicsbody.hpp"
 
 
-Gravity::Gravity() {}
+Gravity::Gravity(Game* g) : game(g) {}
 Gravity::~Gravity() {}
 
 void Gravity::apply(PhysicsBody& pb, wabi::duration deltaTime) {

@@ -5,6 +5,8 @@
 #include "rock.hpp"
 
 
+CollisionSystem::CollisionSystem(Game* g) : game(g) {}
+
 void CollisionSystem::addCollider(Collidable* collider) {
 	wabi::insert_sorted(colliders, collider, [](Collidable * a, Collidable * b)->bool { return a->rect().left < b->rect().left; });
 }
@@ -18,7 +20,7 @@ std::list<Collidable*>::iterator CollisionSystem::removeCollider(Collidable* col
 	return (search != colliders.end()) ? removeCollider(search) : colliders.end();
 }
 
-std::list<std::pair<Collidable*, Collidable*>> CollisionSystem::activeColliderPairs() {
+std::list<std::pair<Collidable*, Collidable*>> CollisionSystem::activeColliderPairs() const {
 	// Uses broad phase sweep and prune to determine a rough list of active Collidable pairs
 	std::list<std::pair<Collidable*, Collidable*>> pairs;
 	std::list<Collidable*> activeColliders;

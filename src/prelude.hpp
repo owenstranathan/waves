@@ -16,6 +16,8 @@ class PhysicsBody;
 class Sea;
 class Rock;
 class Wave;
+class Ship;
+class Platform;
 
 
 //--------- / Systems / ---------// 

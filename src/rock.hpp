@@ -8,7 +8,7 @@ static const float ROCK_MASS = 5.f;
 
 class Rock : public PhysicsBody {
 public:
-	Rock(float r): radius(r) {
+	Rock(Game* g, float r): game(g), radius(r), id(++_seed_id) {
 		mass = ROCK_MASS;
 	}
 
@@ -17,7 +17,14 @@ public:
 	virtual void* resolveCollision(Rock*);
 	virtual void * accept(Visitor&);
 	virtual sf::Rect<float> rect() const;
+	virtual void update(wabi::duration);
+
+	Game* game;
 	float radius;
 	bool hitWater = false;
+	int id;
+
+private:
+	static int _seed_id;
 };
 

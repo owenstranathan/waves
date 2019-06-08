@@ -2,12 +2,13 @@
 #include "utils.hpp"
 #include "visitor.hpp"
 #include "wave.hpp"
+#include "game.hpp"
 #include "sea.hpp"
 
 // statics
 int Wave::_idSeed = 0;
 
-Wave::Wave(Sea * s, float x, float a) : sea(s), startX(x), amplitude(a), id(++_idSeed), position(x, sea->level) {}
+Wave::Wave(Game * g, float x, float a) : game(g), startX(x), amplitude(a), id(++_idSeed), position(x, game->sea->level) {}
 
 Wave::~Wave() { }
 
@@ -19,7 +20,7 @@ void * Wave::accept(Visitor& v) { return v.visit(this); }
 
 float Wave::height(float x) const {
 	// cool guassian
-	return amplitude * b * std::pow(M_E, - std::pow(width * (x - position.x), 2));
+	return amplitude * decay * std::pow(M_E, - std::pow(width * (x - position.x), 2));
 }
 
 float Wave::slope(float x) const {
@@ -28,18 +29,17 @@ float Wave::slope(float x) const {
 }
 
 void Wave::update(wabi::duration deltaTime) {
-	// static float sign = 5.f;
 	auto dt = deltaTime.count();
-	t += dt * 100;
-	position.x = startX + t;
-	if (b >= 1.f) {
+	time += dt * 100;
+	position.x = startX + time;
+	if (decay >= 1.f) {
 		sign = -0.5f;
-	} else if (b <= 0.f && sign <= 0) {
+	} else if (decay <= 0.f && sign <= 0) {
 		sign = 0;
-		b = 0;
+		decay = 0;
+		active = false;
 	}
-	b = b + sign * dt;
-	// width = width + sign * dt;
+	decay = decay + sign * dt;
 }
 
 float Wave::left() const {

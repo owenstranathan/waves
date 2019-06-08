@@ -6,5 +6,6 @@ class GameObject {
 public:
 	virtual void * accept(Visitor&) = 0;
 	virtual void update(wabi::duration deltaTime) = 0;
+	bool active = true;
 };
 

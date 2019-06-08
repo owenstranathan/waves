@@ -12,13 +12,16 @@ public:
 	static void init();
 	static void cleanUp();
 
-	static sf::Font * const font;
+	static sf::Font* const font;
+	static sf::Text* const text;
 };
 
 
-sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game);
-sf::RenderTarget& operator<<(sf::RenderTarget &rt, const Sea& sea);
-sf::RenderTarget& operator<<(sf::RenderTarget &rt,  const Wave& wave);
-sf::RenderTarget& operator<<(sf::RenderTarget &rt, const Rock& rock);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Game&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const CollisionSystem&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Sea&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Wave&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Rock&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Ship&);
 
 #endif // !GRAPHICS_HPP
