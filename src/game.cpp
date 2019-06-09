@@ -1,11 +1,12 @@
 #include "game.hpp"
 #include "sea.hpp"
+#include "ship.hpp"
 #include "rock.hpp"
 #include "wave.hpp"
 
 
 Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), collisionSystem(this), gravity(this), time() {
-	collisionSystem.addCollider(sea);
+	// collisionSystem.addCollider(sea);
 }
 
 Game::~Game() { 
@@ -37,6 +38,10 @@ void Game::update() {
 	}
 
 	collisionSystem.resolveCollisions();
+	auto max_size = 1000;
+	if (log.str().size() > max_size) {
+		log.clear();
+	}
 }
 
 Wave* Game::createWave(float position, float magnitude) {
@@ -84,9 +89,36 @@ std::list<Rock*>::iterator Game::deleteRock(Rock* rock) {
 
 
 void Game::handleEvent(sf::Event& event) {
-	if (event.type == sf::Event::MouseButtonPressed){
-		auto mousePosition = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
-		createRock(mousePosition);
+	static bool mousePressed = false;
+	static sf::Vector2f mousePosition;
+	if (event.type == sf::Event::MouseButtonPressed && ! mousePressed) {
+		mousePosition = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
+		mousePressed = true;
+	}
+	else if (event.type == sf::Event::MouseButtonReleased) {
+		// createRock(mousePosition);
+		auto currMousePos = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
+		auto size = sf::Vector2f(currMousePos.x - mousePosition.x, currMousePos.y - mousePosition.y);
+		auto absSize = sf::Vector2f(std::abs(size.x), abs(size.y));
+		auto xSign = size.x / abs(size.x);
+		auto ySign = size.y / abs(size.y);
+		Ship* ship;
+		if (xSign > 0 && ySign < 0) {		
+			ship = new Ship(mousePosition, absSize);
+		}
+		else if (xSign > 0 && ySign > 0) {
+			auto startPos = sf::Vector2f(mousePosition.x, mousePosition.y + absSize.y);
+			ship = new Ship(startPos, absSize);
+		}
+		else if(xSign < 0 && ySign > 0) {
+			ship = new Ship(currMousePos, absSize);
+		}
+		else{ // (xSign < 0 && ySign < 0) {
+			auto startPos = sf::Vector2f(currMousePos.x, currMousePos.y + absSize.y);
+			ship = new Ship(startPos, absSize);
+		}
+		collisionSystem.addCollider(ship);
+		mousePressed = false;
 	}
 
 }

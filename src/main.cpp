@@ -32,7 +32,7 @@ int main()
     // sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::Default, settings);
     // window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(100);
+	window.setFramerateLimit(10);
 	Graphics::init();
 
 

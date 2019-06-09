@@ -4,12 +4,17 @@
 #include "graphics.hpp"
 #include "game.hpp"
 #include "sea.hpp"
+#include "ship.hpp"
 #include "wave.hpp"
 #include "rock.hpp"
 
 
 sf::Font * const Graphics::font = new sf::Font();
 sf::Text* const Graphics::text = new sf::Text();
+
+template <typename T>
+void drawRect(sf::RenderTarget& rt, const sf::Rect<T>& rect, sf::Color color);
+
 
 void Graphics::init() {
 	// font = new sf::Font();
@@ -43,13 +48,10 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 	Graphics::text->setPosition(3, 3);
 	rt.draw(*Graphics::text);
 
-	Graphics::text->setString(game.log.str());
-	if (game.log.str() != "") {
-		std::cout << game.log.str();
-	}
-	sf::FloatRect textBounds = Graphics::text->getLocalBounds();
-	Graphics::text->setPosition(SCREEN_WIDTH - (textBounds.width+20), 3);
-	rt.draw(*Graphics::text);
+	// Graphics::text->setString(game.log.str());
+	// sf::FloatRect textBounds = Graphics::text->getLocalBounds();
+	// Graphics::text->setPosition(SCREEN_WIDTH - (textBounds.width+20), (SCREEN_HEIGHT/2) - textBounds.height);
+	// rt.draw(*Graphics::text);
 	rt << game.collisionSystem;
 	return rt;
 }
@@ -78,12 +80,13 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const CollisionSystem& collis
 }
 
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Sea& sea) {
-	std::vector<sf::Vertex> vertices;
+	static std::vector<sf::Vertex> vertices;
 	for (int i = 0; i < SCREEN_WIDTH; i += 1) {
 		vertices.push_back(sf::Vertex(wabi::brainToScreenSpace(sf::Vector2f(i, (int)sea.height(i))), SEA_COLOR));
 		vertices.push_back(sf::Vertex(sf::Vector2f(i, SCREEN_HEIGHT), SEA_COLOR));
 	}
 	rt.draw(&vertices[0], vertices.size(), sf::TriangleStrip);
+	vertices.clear();
 
 	// auto rect = sea.rect();
 	// static sf::RectangleShape r(sf::Vector2f(rect.width, rect.height));
@@ -128,7 +131,19 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Rock& rock) {
 
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Ship& ship)
 {
-	// static	sf::RectangleShape shape()
+	drawRect(rt, ship.rect(), sf::Color::Magenta);
 	return rt;
 }
+
+template <typename T>
+void drawRect(sf::RenderTarget& rt, const sf::Rect<T>& rect, sf::Color color) {
+	static sf::RectangleShape rectShape;
+	rectShape.setOutlineColor(color);
+	rectShape.setOutlineThickness(3);
+	rectShape.setFillColor(sf::Color(0, 0, 0, 0));
+	rectShape.setSize(sf::Vector2f(rect.width, rect.height));
+	rectShape.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
+	rt.draw(rectShape);
+}
+
 

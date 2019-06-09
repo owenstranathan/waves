@@ -20,3 +20,12 @@ public:
 	Game* game;
 };
 
+namespace wabi{
+	template <typename T>
+	bool collides(sf::Rect<T> a, sf::Rect<T>b) {
+		return b.contains(b.left, b.top) && b.contains(b.left + b.width, b.top - b.height) || 
+			a.contains(a.left, a.top) && a.contains(a.left + a.width, a.top - a.height) || 
+			a.intersects(b) && b.intersects(a);
+	}
+}
+

@@ -1,5 +1,6 @@
 #include "collisionsystem.hpp"
 #include "collidable.hpp"
+#include "game.hpp"
 #include "sea.hpp"
 #include "wave.hpp"
 #include "rock.hpp"
@@ -24,12 +25,19 @@ std::list<std::pair<Collidable*, Collidable*>> CollisionSystem::activeColliderPa
 	// Uses broad phase sweep and prune to determine a rough list of active Collidable pairs
 	std::list<std::pair<Collidable*, Collidable*>> pairs;
 	std::list<Collidable*> activeColliders;
+	if (colliders.size() < 2) {
+		return pairs;
+	}
 	activeColliders.push_back(*colliders.begin());
 	for (auto c = std::next(colliders.begin()); c != colliders.end(); std::advance(c, 1)) {
 		std::list<Collidable*> stillActive;
 		auto collider = *c;
 		for (Collidable* active : activeColliders) {
-			if (collider->rect().intersects(active->rect())) {
+			auto activeRect = active->rect();
+			auto colliderRect = collider->rect();
+			//if (collider->rect().intersects(active->rect())) {
+			if (wabi::collides(activeRect, colliderRect)){
+			// if (wabi::intersects(collider->rect(), active->rect()) || wabi::intersects(active->rect(), collider->rect())) {
 				pairs.push_back(std::make_pair(collider, active));
 				stillActive.push_back(active);
 			}
@@ -43,7 +51,9 @@ std::list<std::pair<Collidable*, Collidable*>> CollisionSystem::activeColliderPa
 }
 
 void CollisionSystem::resolveCollisions() {
+	wabi::insertion_sort<Collidable*>(colliders.begin(), colliders.end(), [](Collidable * a, Collidable * b)->bool { return a->rect().left < b->rect().left; });
 	std::list<std::pair<Collidable*, Collidable*>> activePairs = activeColliderPairs();
+	game->log << activePairs.size() << " collision pairs." << std::endl;
 	for (auto&& pair : activePairs) {	
 		// TODO: use visitor patternt to get dynamic types and do finer collision check
 		resolveSingleCollision(pair.first, pair.second);

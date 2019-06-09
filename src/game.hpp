@@ -35,6 +35,5 @@ public:
 	std::stringstream log;
 	bool over = false;
 	bool won = false;
-
 };
 
