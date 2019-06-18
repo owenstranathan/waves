@@ -353,4 +353,4 @@ MigrationBackup/
 
 # Cmake and make stuff
 build/
-
+./waves
