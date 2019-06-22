@@ -19,7 +19,7 @@ public:
 
 	virtual void update(wabi::duration);
 
-	virtual sf::Rect<float> rect() const;
+	virtual wabi::Rectf rect() const;
 
 	float width;
 	float height;

@@ -7,14 +7,11 @@
 #include "ship.hpp"
 #include "wave.hpp"
 #include "rock.hpp"
+#include "rect.hpp"
 
 
 sf::Font * const Graphics::font = new sf::Font();
 sf::Text* const Graphics::text = new sf::Text();
-
-template <typename T>
-void drawRect(sf::RenderTarget& rt, const sf::Rect<T>& rect, sf::Color color);
-
 
 void Graphics::init() {
 	// font = new sf::Font();
@@ -44,6 +41,18 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 	infostream << "# waves		: " << game.waves.size() << std::endl;
 	infostream << "# rocks		: " << game.rocks.size() << std::endl;
 	infostream << "# colliders	: " << game.collisionSystem.colliders.size() << std::endl;
+	std::stringstream colliderOrderStream;
+	for (auto&& c : game.collisionSystem.colliders) {
+		colliderOrderStream << c->id << " " ;
+	}
+	infostream << "x order		: " << colliderOrderStream.str() << std::endl;
+
+	std::stringstream colliderPairStream;
+	for (auto&& p : game.collisionSystem.pairs) {
+		colliderPairStream << "(" << p.first->id << ", " << p.second->id << ") ";
+	}
+	infostream << "pairs		: " << colliderPairStream.str() << std::endl;
+
 	Graphics::text->setString(infostream.str());
 	Graphics::text->setPosition(3, 3);
 	rt.draw(*Graphics::text);
@@ -65,6 +74,10 @@ void draw(sf::RenderTarget& rt, const Collidable& collider, sf::Color color) {
 	rectShape.setSize(sf::Vector2f(rect.width, rect.height));
 	rectShape.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
 	rt.draw(rectShape);
+	Graphics::text->setString(std::to_string(collider.id));
+	Graphics::text->setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left + rect.width / 2, rect.top - rect.height / 2)));
+	Graphics::text->setColor(sf::Color::White);
+	rt.draw(*Graphics::text);
 }
 
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const CollisionSystem& collisionSystem)
@@ -72,7 +85,8 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const CollisionSystem& collis
 	for (auto&& collider : collisionSystem.colliders) {
 		draw(rt, *collider, sf::Color::Green);
 	}
-	for (auto&& pair : collisionSystem.activeColliderPairs()) {		
+	// for (auto&& pair : collisionSystem.activeColliderPairs()) {		
+	for (auto&& pair : collisionSystem.pairs) {		
 		draw(rt, *pair.first, sf::Color::Red);
 		draw(rt, *pair.second, sf::Color::Red);
 	}
@@ -136,7 +150,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Ship& ship)
 }
 
 template <typename T>
-void drawRect(sf::RenderTarget& rt, const sf::Rect<T>& rect, sf::Color color) {
+void drawRect(sf::RenderTarget& rt, const wabi::Rect<T>& rect, sf::Color color) {
 	static sf::RectangleShape rectShape;
 	rectShape.setOutlineColor(color);
 	rectShape.setOutlineThickness(3);

@@ -5,7 +5,6 @@
 #include "game.hpp"
 #include "visitor.hpp"
 
-int Rock::_seed_id = 0;
 
 void* Rock::resolveCollision(Collidable* collider) {
 	return nullptr;
@@ -27,8 +26,8 @@ void* Rock::resolveCollision(Rock* rock) {
 
 void * Rock::accept(Visitor& v) { return v.visit(this); }
 
-sf::FloatRect Rock::rect() const {
-	return sf::Rect<float>(position.x - radius, position.y + radius, 2 * radius, 2 * radius);
+wabi::Rectf Rock::rect() const {
+	return wabi::Rectf(position.x - radius, position.y + radius, 2 * radius, 2 * radius);
 }
 
 void Rock::update(wabi::duration deltaTime)

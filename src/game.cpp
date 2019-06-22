@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "game.hpp"
 #include "sea.hpp"
 #include "ship.hpp"
@@ -120,5 +122,14 @@ void Game::handleEvent(sf::Event& event) {
 		collisionSystem.addCollider(ship);
 		mousePressed = false;
 	}
-
+	else if (event.type == sf::Event::KeyPressed) {
+		std::cout << event.key.code << std::endl;
+		switch (event.key.code)
+		{
+		case sf::Keyboard::C:
+			collisionSystem.clear();
+		default:
+			break;
+		}
+	}
 }

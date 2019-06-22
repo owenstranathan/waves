@@ -22,40 +22,40 @@ const float SEA_LEVEL = 200.f;
 
 int main()
 {
-  // wabi::Time time;
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 100;
-    auto videoMode = sf::VideoMode::getDesktopMode();
-    SCREEN_HEIGHT = videoMode.height;
-    SCREEN_WIDTH = videoMode.width;
-    std::cout << SCREEN_HEIGHT << " " << SCREEN_WIDTH << std::endl;
-    // sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::Default, settings);
-    // window.setVerticalSyncEnabled(true);
-  window.setFramerateLimit(100);
-  Graphics::init();
+	// wabi::Time time;
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 100;
+	auto videoMode = sf::VideoMode::getDesktopMode();
+	SCREEN_HEIGHT = videoMode.height;
+	SCREEN_WIDTH = videoMode.width;
+	std::cout << SCREEN_HEIGHT << " " << SCREEN_WIDTH << std::endl;
+	// sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::Default, settings);
+	// window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(100);
+	Graphics::init();
 
 
-  // Sea sea(SEA_LEVEL);
-  // std::list<Rock*> rocks;
-  // Gravity gravity;
-  Game game(SEA_LEVEL);
-  // game loop
-    while (!game.over && window.isOpen())
-    {
-    game.update();
+	// Sea sea(SEA_LEVEL);
+	// std::list<Rock*> rocks;
+	// Gravity gravity;
+	Game game(SEA_LEVEL);
+	// game loop
+	while (!game.over && window.isOpen())
+	{
+		game.update();
 
-        // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-      if (event.type == sf::Event::Closed)
-        window.close();
-      game.handleEvent(event);
-    }
-    window << game;   
-    window.display();
-    }
-  Graphics::cleanUp();
-    return 0;
+		// check all the window's events that were triggered since the last iteration of the loop
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			game.handleEvent(event);
+		}
+		window << game;
+		window.display();
+	}
+	Graphics::cleanUp();
+	return 0;
 }

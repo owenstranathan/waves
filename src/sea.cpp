@@ -38,10 +38,10 @@ float Sea::height(float x) const {
 	return h;
 }
 
-sf::Rect<float> Sea::rect() const {
+wabi::Rectf Sea::rect() const {
 	float max = level;
 	for (auto&& w : game->waves) {
 		max = std::max(max, level + w->height(w->position.x));
 	}
-	return sf::FloatRect(0.f, max, SCREEN_WIDTH, max);
+	return wabi::Rectf(0.f, max, SCREEN_WIDTH, max);
 }

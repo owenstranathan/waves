@@ -7,7 +7,7 @@
 #include "collidable.hpp"
 
 
-class Sea : public Collidable{
+class Sea : public Collidable {
 public:
 	Sea(Game*, float);
 	~Sea();
@@ -19,7 +19,7 @@ public:
 	virtual void update(wabi::duration deltaTime);
 	float height(float x) const;
 	float slope(float x) const;
-	sf::Rect<float> rect() const;
+	wabi::Rectf rect() const;
 
 	// std::list<Wave*> waves;
 	float level;

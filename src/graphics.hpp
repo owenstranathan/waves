@@ -24,4 +24,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget&, const Wave&);
 sf::RenderTarget& operator<<(sf::RenderTarget&, const Rock&);
 sf::RenderTarget& operator<<(sf::RenderTarget&, const Ship&);
 
+template <typename T>
+void drawRect(sf::RenderTarget& rt, const wabi::Rect<T>& rect, sf::Color color);
+
 #endif // !GRAPHICS_HPP

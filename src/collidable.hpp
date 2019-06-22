@@ -8,5 +8,5 @@ class Collidable : public GameObject{
 public:
 	virtual void * accept(Visitor& v);
 	virtual void* resolveCollision(Collidable* c) = 0;
-	virtual sf::Rect<float> rect() const = 0;
+	virtual wabi::Rectf rect() const = 0;
 };

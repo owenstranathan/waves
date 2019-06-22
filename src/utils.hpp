@@ -12,6 +12,7 @@
 #include <list>
 #include <SFML/Graphics.hpp>
 
+#include "rect.hpp"
 
 extern int SCREEN_HEIGHT;
 extern int SCREEN_WIDTH;

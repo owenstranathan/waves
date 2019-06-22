@@ -163,6 +163,7 @@
     <ClInclude Include="src\physicsbody.hpp" />
     <ClInclude Include="src\platform.hpp" />
     <ClInclude Include="src\prelude.hpp" />
+    <ClInclude Include="src\rect.hpp" />
     <ClInclude Include="src\rock.hpp" />
     <ClInclude Include="src\sea.hpp" />
     <ClInclude Include="src\ship.hpp" />

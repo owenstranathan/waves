@@ -6,9 +6,8 @@
 #include "sea.hpp"
 
 // statics
-int Wave::_idSeed = 0;
 
-Wave::Wave(Game * g, float x, float a) : game(g), startX(x), amplitude(a), id(++_idSeed), position(x, game->sea->level) {}
+Wave::Wave(Game * g, float x, float a) : game(g), startX(x), amplitude(a), position(x, game->sea->level) {}
 
 Wave::~Wave() { }
 
@@ -50,9 +49,9 @@ float Wave::right() const {
 	return position.x + 2.5f * (1 / width);
 }
 
-sf::Rect<float> Wave::rect() const {
+wabi::Rectf Wave::rect() const {
 	float h = height(position.x);
 	float top = position.y + h;
-	return sf::Rect<float>(left(), top, right() - left(), h);
+	return wabi::Rectf(left(), top, right() - left(), h);
 }
 

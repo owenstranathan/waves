@@ -21,40 +21,40 @@ std::list<Collidable*>::iterator CollisionSystem::removeCollider(Collidable* col
 	return (search != colliders.end()) ? removeCollider(search) : colliders.end();
 }
 
-std::list<std::pair<Collidable*, Collidable*>> CollisionSystem::activeColliderPairs() const {
+// std::list<std::pair<Collidable*, Collidable*>> CollisionSystem::activeColliderPairs() const {
+void CollisionSystem::activeColliderPairs() {
 	// Uses broad phase sweep and prune to determine a rough list of active Collidable pairs
-	std::list<std::pair<Collidable*, Collidable*>> pairs;
-	std::list<Collidable*> activeColliders;
+	pairs.clear();
 	if (colliders.size() < 2) {
-		return pairs;
+		return;
 	}
-	activeColliders.push_back(*colliders.begin());
-	for (auto c = std::next(colliders.begin()); c != colliders.end(); std::advance(c, 1)) {
-		std::list<Collidable*> stillActive;
+	float maxX = (*colliders.begin())->rect().right();
+	for (auto c = std::next(colliders.begin()); c != colliders.end(); c = std::next(c)) {
 		auto collider = *c;
-		for (Collidable* active : activeColliders) {
+		auto colliderRect = collider->rect();
+		auto a = c;
+		do {
+			a = std::prev(a);
+			auto active = *a;
 			auto activeRect = active->rect();
-			auto colliderRect = collider->rect();
-			//if (collider->rect().intersects(active->rect())) {
-			if (wabi::collides(activeRect, colliderRect)){
-			// if (wabi::intersects(collider->rect(), active->rect()) || wabi::intersects(active->rect(), collider->rect())) {
+			if (activeRect.intersects(colliderRect)) {
 				pairs.push_back(std::make_pair(collider, active));
-				stillActive.push_back(active);
 			}
+			if (colliderRect.left > maxX) {
+				break;
+			}
+		} while (a != colliders.begin());
+		if (colliderRect.right() > maxX) {
+			maxX = colliderRect.right();
 		}
-		activeColliders.clear();
-		activeColliders.swap(stillActive);
-		stillActive.clear();
-		activeColliders.push_back(collider);
 	}
-	return pairs;
 }
 
 void CollisionSystem::resolveCollisions() {
 	wabi::insertion_sort<Collidable*>(colliders.begin(), colliders.end(), [](Collidable * a, Collidable * b)->bool { return a->rect().left < b->rect().left; });
-	std::list<std::pair<Collidable*, Collidable*>> activePairs = activeColliderPairs();
-	game->log << activePairs.size() << " collision pairs." << std::endl;
-	for (auto&& pair : activePairs) {	
+	activeColliderPairs();
+	game->log << pairs.size() << " collision pairs." << std::endl;
+	for (auto&& pair : pairs) {	
 		// TODO: use visitor patternt to get dynamic types and do finer collision check
 		resolveSingleCollision(pair.first, pair.second);
 	}
@@ -83,4 +83,8 @@ void CollisionSystem::resolveSingleCollision(Collidable* a, Collidable* b) {
 	else if (Rock * rock = dynamic_cast<Rock*>(a)) {
 		resolveGenericCollision(rock, b);
 	} 
+}
+
+void CollisionSystem::clear() {
+	colliders.clear();
 }
