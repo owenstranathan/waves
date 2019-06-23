@@ -8,13 +8,12 @@
 
 
 Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), collisionSystem(this), gravity(this), time() {
-	// collisionSystem.addCollider(sea);
+	collisionSystem.addCollider(sea);
 }
 
 Game::~Game() { 
-	// collisionSystem.removeCollider(sea);
+	collisionSystem.removeCollider(sea);
 	delete sea;
-
 }
 
 void Game::update() {
@@ -98,38 +97,39 @@ void Game::handleEvent(sf::Event& event) {
 		mousePressed = true;
 	}
 	else if (event.type == sf::Event::MouseButtonReleased) {
-		// createRock(mousePosition);
-		auto currMousePos = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
-		auto size = sf::Vector2f(currMousePos.x - mousePosition.x, currMousePos.y - mousePosition.y);
-		auto absSize = sf::Vector2f(std::abs(size.x), abs(size.y));
-		auto xSign = size.x / abs(size.x);
-		auto ySign = size.y / abs(size.y);
-		Ship* ship;
-		if (xSign > 0 && ySign < 0) {		
-			ship = new Ship(mousePosition, absSize);
-		}
-		else if (xSign > 0 && ySign > 0) {
-			auto startPos = sf::Vector2f(mousePosition.x, mousePosition.y + absSize.y);
-			ship = new Ship(startPos, absSize);
-		}
-		else if(xSign < 0 && ySign > 0) {
-			ship = new Ship(currMousePos, absSize);
-		}
-		else{ // (xSign < 0 && ySign < 0) {
-			auto startPos = sf::Vector2f(currMousePos.x, currMousePos.y + absSize.y);
-			ship = new Ship(startPos, absSize);
-		}
-		collisionSystem.addCollider(ship);
+	// if (event.type == sf::Event::MouseButtonReleased) {
+		createRock(mousePosition);
+		// auto currMousePos = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
+		// auto size = sf::Vector2f(currMousePos.x - mousePosition.x, currMousePos.y - mousePosition.y);
+		// auto absSize = sf::Vector2f(std::abs(size.x), abs(size.y));
+		// auto xSign = size.x / abs(size.x);
+		// auto ySign = size.y / abs(size.y);
+		// Ship* ship;
+		// if (xSign > 0 && ySign < 0) {		
+		// 	ship = new Ship(mousePosition, absSize);
+		// }
+		// else if (xSign > 0 && ySign > 0) {
+		// 	auto startPos = sf::Vector2f(mousePosition.x, mousePosition.y + absSize.y);
+		// 	ship = new Ship(startPos, absSize);
+		// }
+		// else if(xSign < 0 && ySign > 0) {
+		// 	ship = new Ship(currMousePos, absSize);
+		// }
+		// else{ // (xSign < 0 && ySign < 0) {
+		// 	auto startPos = sf::Vector2f(currMousePos.x, currMousePos.y + absSize.y);
+		// 	ship = new Ship(startPos, absSize);
+		// }
+		// collisionSystem.addCollider(ship);
 		mousePressed = false;
 	}
 	else if (event.type == sf::Event::KeyPressed) {
-		std::cout << event.key.code << std::endl;
-		switch (event.key.code)
-		{
-		case sf::Keyboard::C:
-			collisionSystem.clear();
-		default:
-			break;
-		}
+		// std::cout << event.key.code << std::endl;
+		// switch (event.key.code)
+		// {
+		// case sf::Keyboard::C:
+		// 	collisionSystem.clear();
+		// default:
+		// 	break;
+		// }
 	}
 }

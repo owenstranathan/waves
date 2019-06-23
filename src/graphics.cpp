@@ -40,16 +40,17 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 	infostream << "totalTime    : " << game.time.totalTime.count() << std::endl;
 	infostream << "# waves		: " << game.waves.size() << std::endl;
 	infostream << "# rocks		: " << game.rocks.size() << std::endl;
-	infostream << "# colliders	: " << game.collisionSystem.colliders.size() << std::endl;
-	std::stringstream colliderOrderStream;
-	for (auto&& c : game.collisionSystem.colliders) {
-		colliderOrderStream << c->id << " " ;
-	}
-	infostream << "x order		: " << colliderOrderStream.str() << std::endl;
+	infostream << "# colliders	: " << game.collisionSystem.size() << std::endl;
+	// std::stringstream colliderOrderStream;
+	// for (auto&& c : game.collisionSystem.colliders) {
+	// 	colliderOrderStream << c->id << " " ;
+	// }
+	// infostream << "x order		: " << colliderOrderStream.str() << std::endl;
 
 	std::stringstream colliderPairStream;
 	for (auto&& p : game.collisionSystem.pairs) {
-		colliderPairStream << "(" << p.first->id << ", " << p.second->id << ") ";
+		Collider c = p.second;
+		colliderPairStream << "(" << c.pair.first->id << ", " << c.pair.second->id << ") ";
 	}
 	infostream << "pairs		: " << colliderPairStream.str() << std::endl;
 
@@ -82,13 +83,17 @@ void draw(sf::RenderTarget& rt, const Collidable& collider, sf::Color color) {
 
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const CollisionSystem& collisionSystem)
 {
-	for (auto&& collider : collisionSystem.colliders) {
+	for (auto&& collider : collisionSystem.colliders()) {
 		draw(rt, *collider, sf::Color::Green);
 	}
 	// for (auto&& pair : collisionSystem.activeColliderPairs()) {		
 	for (auto&& pair : collisionSystem.pairs) {		
-		draw(rt, *pair.first, sf::Color::Red);
-		draw(rt, *pair.second, sf::Color::Red);
+		Collider c = pair.second;
+		if (c.colliding())
+		{
+			draw(rt, *c.pair.first, sf::Color::Red);
+			draw(rt, *c.pair.second, sf::Color::Red);
+		}
 	}
 	return rt;
 }
