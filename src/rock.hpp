@@ -1,21 +1,25 @@
-#ifndef ROCK_HPP 
-#define ROCK_HPP
+#pragma once
 
 #include "utils.hpp"
-#include "collidable.hpp"
+#include "physicsbody.hpp"
 
-class Rock : Collidable{
+static const float ROCK_MASS = 5.f;
+
+
+class Rock : public PhysicsBody {
 public:
-	Rock(): radius(0) {}
-	Rock(float r): radius(r) {}
+	Rock(Game* g, float r): game(g), radius(r) {
+		density = 2;
+	}
 
-	void fixedUpdate();
-	sf::Rect<float> rect();
+	virtual void resolveCollision(Sea*);
+	virtual void accept(Visitor&);
+	virtual void accept(CollisionVisitor&, Collidable*);
+	virtual wabi::Rectf rect() const;
+	virtual void update(wabi::duration);
 
-	sf::Vector2f position;
-	sf::Vector2f velocity;
-	sf::Vector2f acceleration;
+	Game* game;
 	float radius;
+	bool hitWater = false;
 };
 
-#endif

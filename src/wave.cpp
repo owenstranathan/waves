@@ -1,47 +1,56 @@
-
 #include <iostream>
-
 #include "utils.hpp"
+#include "visitor.hpp"
 #include "wave.hpp"
+#include "game.hpp"
 #include "sea.hpp"
 
 // statics
-wabi::Time Wave::time = wabi::Time();
 
-Wave::Wave(Sea const * s, float p, float m, float time) : sea(s), position(p, sea->level), magnitude(m), t(time) { }
+Wave::Wave(Game * g, float x, float a) : game(g), startX(x), amplitude(a), position(x, game->sea->level) {}
 
 Wave::~Wave() { }
 
-float Wave::height(float x) {
-	// float mag_recip = 1.0f / magnitude;
-	// return (magnitude/ ( time + 1)) * std::pow(M_E, -1.0f * std::pow(mag_recip * x - time, 2)) + 200; 
-	// return magnitude * std::pow(M_E, (-1.0f / (magnitude*magnitude)) * std::pow(x - time, 2)) + 200; 
+void Wave::accept(Visitor& v) { return v.visit(this); }
 
-	return magnitude * std::pow(M_E, dc * t * t) * std::pow(std::sinf((1.0f / magnitude) * M_PI * x), 2) + sea->level;
+void Wave::accept(CollisionVisitor& v, Collidable* c) { v.visit(this, c); }
+
+
+float Wave::height(float x) const {
+	// cool guassian
+	return amplitude * decay * std::pow(M_E, - std::pow(width * (x - position.x), 2));
 }
 
-void Wave::fixedUpdate() {
-	t += time.deltaTime.count();
-	position.x += time.deltaTime.count() * 50;
-	// if (time < 0) {
-	//  	time += t.deltaTime.count() * 20;
-	// }
-	// else {
-	//  	time += t.deltaTime.count();
-	// }
-	//transform.translate(1, 1);
-	// transform.translate(5.0f, 0);
+float Wave::slope(float x) const {
+	// derivative of height
+	return height(x) * (-2 * width * (x - position.x) * width);
 }
 
-sf::Rect<float> Wave::rect() {
-	float left = position.x - magnitude;
+void Wave::update(wabi::duration deltaTime) {
+	auto dt = deltaTime.count();
+	time += dt * 100;
+	position.x = startX + time;
+	if (decay >= 1.f) {
+		sign = -0.5f;
+	} else if (decay <= 0.f && sign <= 0) {
+		sign = 0;
+		decay = 0;
+		active = false;
+	}
+	decay = decay + sign * dt;
+}
+
+float Wave::left() const {
+	return position.x - 2.5f * (1 / width);
+}
+
+float Wave::right() const {
+	return position.x + 2.5f * (1 / width);
+}
+
+wabi::Rectf Wave::rect() const {
 	float h = height(position.x);
 	float top = position.y + h;
-	return sf::Rect<float>(left, top, magnitude, h);
-}
-
-float Wave::tomd() { // time of maximal decay
-	// t = sqrt((1/decayCoeff)*ln(ALMOST_ZERO))
-	return std::sqrt((1.0f / dc) * std::logf(ALMOST_ZERO));
+	return wabi::Rectf(left(), top, right() - left(), h);
 }
 

@@ -2,15 +2,33 @@
 #define GRAPHICS_HPP
 
 #include "utils.hpp"
-#include "wave.hpp"
-#include "rock.hpp"
-#include "sea.hpp"
+#include "prelude.hpp"
 
-const sf::Color SeaColor = sf::Color::Blue;
-const sf::Color WaveColor = SeaColor;
+#define SEA_COLOR sf::Color::Cyan
 
-sf::RenderTarget& operator<<(sf::RenderTarget &rt, Sea& sea);   // draw a sea on a RenderTarget
-sf::RenderTarget& operator<<(sf::RenderTarget &rt,  Wave& wave);  // draw a wave on a RenderTarget
-sf::RenderTarget& operator<<(sf::RenderTarget &rt, Rock& rock);   // draw a rock on a RenderTarget
+class Graphics {
+public:
+
+	static void init();
+	static void cleanUp();
+
+	static float worldToScreenRatio;
+
+	static sf::Font* const font;
+	static sf::Text* const text;
+};
+
+
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Game&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const CollisionSystem&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Sea&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Wave&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Rock&);
+sf::RenderTarget& operator<<(sf::RenderTarget&, const Ship&);
+
+void draw(sf::RenderTarget&, const Collidable&, sf::Color);
+
+template <typename T>
+void drawRect(sf::RenderTarget& rt, const wabi::Rect<T>& rect, sf::Color color);
 
 #endif // !GRAPHICS_HPP

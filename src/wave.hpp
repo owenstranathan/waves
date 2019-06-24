@@ -6,33 +6,40 @@
 #include <vector>
 #include <math.h>
 
-// #include "everybodyinthepool.hpp"
+#include "prelude.hpp"
 #include "utils.hpp"
 #include "collidable.hpp"
-#include "sea.hpp"
 
+// TODO: make a wave management class (ObjectPool)
 
-class Sea;
-
-// return wave->magnitude* std::pow(M_E, -0.05 * wave->time * wave->time) * std::pow(std::sinf((1.0f / wave->magnitude) * M_PI * x - wave->time), 2);
-class Wave : Collidable {
+class Wave : public Collidable {
 public:
-	Wave(Sea const* sea, float position, float magnitude, float time=0);
+	Wave(Game*, float, float);
 	~Wave();
 
-	float height(float x); // this can be a free function in the future, or a function pointer a caller provides	
-	void fixedUpdate();
-	sf::Rect<float> rect();
-	float tomd();
+	float height(float x) const; 
+	float slope(float x) const;
+	float left() const;
+	float right() const;
 
-	Sea const * sea;
-	sf::Vector2f position; 
-	float t;
-	float magnitude;
-	float dc = -0.05; // decay coefficient
+	virtual void accept(Visitor &);
+	virtual void accept(CollisionVisitor &, Collidable* c);
+	virtual void update(wabi::duration deltaTime);
+	virtual wabi::Rectf rect() const;
 
-	static wabi::Time time;
+// Inherited via Collidable
 
+
+	// Sea *sea;
+	Game* game;
+	sf::Vector2f position;
+	float startX;
+	float amplitude;
+	float sign = 5.f;
+	float time = 0;
+	float width = 0.01;
+	float decay = 0;
+	// decay coefficient
 };
 
 #endif // !WAVE_HPP
