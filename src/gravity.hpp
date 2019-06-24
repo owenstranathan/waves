@@ -1,5 +1,4 @@
-#ifndef GRAVITY_HPP
-#define GRAVITY_HPP
+#pragma once
 
 #include <vector>
 
@@ -19,4 +18,3 @@ public:
 	Game* game;
 };
 
-#endif // !GRAVITY_HPP

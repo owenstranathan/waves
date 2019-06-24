@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_HPP
-#define GRAPHICS_HPP
+#pragma once
 
 #include "utils.hpp"
 #include "prelude.hpp"
@@ -31,4 +30,4 @@ void draw(sf::RenderTarget&, const Collidable&, sf::Color);
 template <typename T>
 void drawRect(sf::RenderTarget& rt, const wabi::Rect<T>& rect, sf::Color color);
 
-#endif // !GRAPHICS_HPP
+

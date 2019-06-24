@@ -66,7 +66,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 	// Graphics::text->setPosition(SCREEN_WIDTH - (textBounds.width+20), (SCREEN_HEIGHT/2) - textBounds.height);
 	// rt.draw(*Graphics::text);
 	rt << game.collisionSystem;
-	// rt << *game.ship;
+	rt << *game.ship;
 	return rt;
 }
 
@@ -90,7 +90,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const CollisionSystem& collis
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Sea& sea) {
 	static std::vector<sf::Vertex> vertices;
 	for (int i = 0; i < SCREEN_WIDTH; i += 1) {
-		vertices.push_back(sf::Vertex(wabi::brainToScreenSpace(sf::Vector2f(i, (int)sea.height(i))), SEA_COLOR));
+		vertices.push_back(sf::Vertex(brainToScreenSpace(sf::Vector2f(i, (int)sea.height(i))), SEA_COLOR));
 		vertices.push_back(sf::Vertex(sf::Vector2f(i, SCREEN_HEIGHT), SEA_COLOR));
 	}
 	rt.draw(&vertices[0], vertices.size(), sf::TriangleStrip);
@@ -101,7 +101,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Sea& sea) {
 	// r.setOutlineColor(sf::Color::Red);
 	// r.setOutlineThickness(3);
 	// r.setFillColor(sf::Color(0,0,0,0));
-	// r.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
+	// r.setPosition(brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
 	// rt.draw(r);
 
 	// static sf::CircleShape point;
@@ -109,7 +109,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Sea& sea) {
 	// point.setFillColor(sf::Color::Red);
 	// point.setOrigin(sf::Vector2f(2.5f, 2.5f));
 	// for (auto&& wave : sea.game->waves) {
-	// 	point.setPosition(wabi::brainToScreenSpace(wave->position));
+	// 	point.setPosition(brainToScreenSpace(wave->position));
 	// 	rt.draw(point);
 	// }
 		// rt.draw(&vertices[0], vertices.size(), sf::LineStrip);
@@ -120,7 +120,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Wave& wave) {
 	// static sf::CircleShape point(3);
 	// point.setFillColor(sf::Color::Blue);
 	// for (int i = 0; i < wave.num_vertices; i++) {
-	// 	point.setPosition(wabi::brainToScreenSpace(wave.vertices[i]));
+	// 	point.setPosition(brainToScreenSpace(wave.vertices[i]));
 	// 	rt.draw(point);
 	// }
 	return rt;
@@ -132,14 +132,24 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Rock& rock) {
 	shape.setOutlineColor(sf::Color(204, 51, 0));
 	shape.setFillColor(sf::Color(0, 0, 0, 0));
 	shape.setOrigin(sf::Vector2f(rock.radius, rock.radius));
-	shape.setPosition(wabi::brainToScreenSpace(rock.position));
+	shape.setPosition(brainToScreenSpace(rock.position));
 	rt.draw(shape);
 	return rt;
 }
 
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Ship& ship)
 {
-	drawRect(rt, ship.rect(), sf::Color::Magenta);
+	// drawRect(rt, ship.rect(), sf::Color::Magenta);
+	// static sf::RectangleShape rectShape;
+	// rectShape.setOutlineColor(sf::Color::Magenta);
+	// rectShape.setOutlineThickness(3);
+	// rectShape.setFillColor(sf::Color(0, 0, 0, 0));
+	// auto rect = ship.rect();
+	// auto size = toScreen(sf::Vector2f(rect.width, rect.height));
+	// auto pos = toScreen(sf::Vector2f(rect.left, rect.top));
+	// rectShape.setSize(size);
+	// rectShape.setPosition(pos);
+	// rt.draw(rectShape);
 	return rt;
 }
 
@@ -150,10 +160,10 @@ void draw(sf::RenderTarget& rt, const Collidable& collider, sf::Color color) {
 	rectShape.setFillColor(sf::Color(0, 0, 0, 0));
 	auto rect = collider.rect();
 	rectShape.setSize(sf::Vector2f(rect.width, rect.height));
-	rectShape.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
+	rectShape.setPosition(brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
 	rt.draw(rectShape);
 	Graphics::text->setString(std::to_string(collider.id));
-	Graphics::text->setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left + rect.width / 2, rect.top - rect.height / 2)));
+	Graphics::text->setPosition(brainToScreenSpace(sf::Vector2f(rect.left + rect.width / 2, rect.top - rect.height / 2)));
 	Graphics::text->setColor(sf::Color::White);
 	rt.draw(*Graphics::text);
 }
@@ -166,7 +176,7 @@ void drawRect(sf::RenderTarget& rt, const wabi::Rect<T>& rect, sf::Color color) 
 	rectShape.setOutlineThickness(3);
 	rectShape.setFillColor(sf::Color(0, 0, 0, 0));
 	rectShape.setSize(sf::Vector2f(rect.width, rect.height));
-	rectShape.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
+	rectShape.setPosition(brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
 	rt.draw(rectShape);
 }
 

@@ -6,6 +6,7 @@
 #include "utils.hpp"
 #include "collisionsystem.hpp"
 #include "gravity.hpp"
+#include "graphics.hpp"
 
 class Game {
 	// TODO: something here.
@@ -35,5 +36,30 @@ public:
 	std::stringstream log;
 	bool over = false;
 	bool won = false;
+	static const float worldWidth;
+	static const float worldHeight;
 };
+
+template <typename T>
+inline sf::Vector2<T> brainToScreenSpace(const sf::Vector2<T> in) {
+	return sf::Vector2<T>(in.x, (SCREEN_HEIGHT - in.y));
+}
+
+template <typename T>
+inline sf::Vector2<T> screenToBrainSpace(const sf::Vector2<T> in) {
+	return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
+}
+
+template <typename T>
+inline sf::Vector2<T> toWorld(const sf::Vector2<T> in) {
+	// TODO: fuck. implement scalign
+	return screenToBrainSpace(in) / Graphics::worldToScreenRatio;
+}
+
+template <typename T>
+inline  sf::Vector2<T> toScreen(const sf::Vector2<T> in) {
+	// TODO: fuck. implement scalign
+	auto v = sf::Vector2<T>(in.x * Graphics::worldToScreenRatio, (Game::worldHeight - in.y) * Graphics::worldToScreenRatio)
+	return * Graphics::worldToScreenRatio;
+}
 

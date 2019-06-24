@@ -1,7 +1,4 @@
-
-#ifndef WAVE_HPP
-#define WAVE_HPP
-
+#pragma once
 
 #include <vector>
 #include <math.h>
@@ -42,4 +39,3 @@ public:
 	// decay coefficient
 };
 
-#endif // !WAVE_HPP

@@ -8,7 +8,8 @@ static const float ROCK_MASS = 5.f;
 
 class Rock : public PhysicsBody {
 public:
-	Rock(Game* g, float r): game(g), radius(r) {
+	Rock(Game* g, float r): radius(r) {
+		game = g;
 		density = 2;
 	}
 
@@ -18,7 +19,6 @@ public:
 	virtual wabi::Rectf rect() const;
 	virtual void update(wabi::duration);
 
-	Game* game;
 	float radius;
 	bool hitWater = false;
 };

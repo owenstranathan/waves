@@ -6,8 +6,14 @@
 #include "rock.hpp"
 #include "wave.hpp"
 
+const float Game::worldWidth = 25.6;
+const float Game::worldHeight = 14.4;
 
-Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), ship(new Ship(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT -200 ), 75, 75)), collisionSystem(this), gravity(this), time() {
+Game::Game(float seaLevel) : 
+	sea(new Sea(this, seaLevel)), ship(new Ship(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT-200 ), 75, 75)),
+	collisionSystem(this), gravity(this), time()
+	// worldWidth(25.6), worldHeight
+{
 	collisionSystem.addCollider(sea);
 	collisionSystem.addCollider(ship);
 }
@@ -53,7 +59,6 @@ void Game::update() {
 Wave* Game::createWave(float position, float magnitude) {
 	Wave * wave = new Wave(this, position, magnitude);
 	waves.push_back(wave);
-	// wabi::insert_sorted(waves, wave, [](Wave * a, Wave * b)->bool {return a->rect().left < b->rect().left; });
 	collisionSystem.addCollider(wave);
 	return wave;
 }
@@ -98,11 +103,10 @@ void Game::handleEvent(sf::Event& event) {
 	static bool mousePressed = false;
 	static sf::Vector2f mousePosition;
 	if (event.type == sf::Event::MouseButtonPressed && ! mousePressed) {
-		mousePosition = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
+		mousePosition = screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
 		mousePressed = true;
 	}
 	else if (event.type == sf::Event::MouseButtonReleased) {
-	// if (event.type == sf::Event::MouseButtonReleased) {
 		createRock(mousePosition);
 		// auto currMousePos = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
 		// auto size = sf::Vector2f(currMousePos.x - mousePosition.x, currMousePos.y - mousePosition.y);

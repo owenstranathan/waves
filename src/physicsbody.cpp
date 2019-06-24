@@ -3,11 +3,10 @@
 #include "gravity.hpp"
 #include "visitor.hpp"
 
-PhysicsBody::PhysicsBody() { }
+// PhysicsBody::PhysicsBody() { }
 
-PhysicsBody::PhysicsBody(sf::Vector2f p) : position(p){ }
+// PhysicsBody::PhysicsBody(sf::Vector2f p) : position(p){ }
 
-PhysicsBody::~PhysicsBody() { }
 
 
 void PhysicsBody::update(wabi::duration deltaTime) {

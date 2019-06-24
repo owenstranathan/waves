@@ -1,5 +1,4 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#pragma once
 
 #define _USE_MATH_DEFINES
 
@@ -112,15 +111,6 @@ namespace wabi
 	    return sf::Vector2<T>(blah(), blah());
 	}	
 
-	template <typename T>
-	sf::Vector2<T> brainToScreenSpace(const sf::Vector2<T> in) {
-		return sf::Vector2<T>(in.x, (SCREEN_HEIGHT - in.y));
-	}
-
-	template <typename T>
-	sf::Vector2<T> screenToBrainSpace(const sf::Vector2<T> in) {
-		return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
-	}
 
 	template <typename T>
 	T sign(T t) {
@@ -152,4 +142,3 @@ T operator*(sf::Vector2<T> v1, sf::Vector2<T> v2) {
 	return wabi::dot(v1, v2);
 }
 
-#endif // !UTILS_HPP

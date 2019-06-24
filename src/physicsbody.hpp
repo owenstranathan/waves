@@ -8,9 +8,9 @@
 class PhysicsBody : public Collidable {
 public:
 
-	PhysicsBody();
-	PhysicsBody(sf::Vector2f);
-	~PhysicsBody();
+	// PhysicsBody();
+	// PhysicsBody(sf::Vector2f);
+	// ~PhysicsBody();
 
 	virtual void update(wabi::duration deltaTime);
 	virtual void drag(float);
