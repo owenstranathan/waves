@@ -14,7 +14,7 @@ public:
 
 	void apply(PhysicsBody& pb, wabi::duration deltaTime);
 
-	const float constant = -19.8f;
+	static const float constant;
 
 	Game* game;
 };

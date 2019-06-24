@@ -7,18 +7,23 @@
 #include "wave.hpp"
 
 
-Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), collisionSystem(this), gravity(this), time() {
+Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), ship(new Ship(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT -200 ), 75, 75)), collisionSystem(this), gravity(this), time() {
 	collisionSystem.addCollider(sea);
+	collisionSystem.addCollider(ship);
 }
 
 Game::~Game() { 
 	collisionSystem.removeCollider(sea);
+	collisionSystem.removeCollider(ship);
 	delete sea;
+	delete ship;
 }
 
 void Game::update() {
 	time.keepTime();
 	sea->update(time.deltaTime);
+	gravity.apply(*ship, time.deltaTime);
+	ship->update(time.deltaTime);
 	// Housekeeping.. killing rocks and waves
 	for (auto it = waves.begin(); it != waves.end(); std::advance(it, 1)) {
 		auto wave = *it;

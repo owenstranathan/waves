@@ -70,11 +70,17 @@ namespace wabi
 			item
 		);
 	}
+ 
+	template <typename T>
+	T dot(sf::Vector2<T> v1, sf::Vector2<T> v2) {
+		return v1.x * v2.x + v1.y * v2.y;
+	}
+
 
 	template <typename T>
 	T squareMagnitude(const sf::Vector2<T> &v)
 	{
-		return v.x * v.x + v.y * v.y;
+		return dot(v, v);
 	}
 	
 	template <typename T>
@@ -82,7 +88,7 @@ namespace wabi
 	{
 	    return sqrt(squareMagnitude(v));
 	}
-	
+		
 	template <typename T>
 	sf::Vector2<T> normalized(sf::Vector2<T> v)
 	{
@@ -116,6 +122,13 @@ namespace wabi
 		return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
 	}
 
+	template <typename T>
+	T sign(T t) {
+		if (t == 0) { return t; }
+		return t / std::abs(t);
+	}
+
+
 } // namespace wabi
 
 template <typename T>
@@ -134,5 +147,9 @@ std::ostream &operator<<(std::ostream &os, const sf::Vector2<T> &v)
     return os;
 }
 
+template <typename T>
+T operator*(sf::Vector2<T> v1, sf::Vector2<T> v2) {
+	return wabi::dot(v1, v2);
+}
 
 #endif // !UTILS_HPP

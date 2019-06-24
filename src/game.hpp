@@ -7,7 +7,6 @@
 #include "collisionsystem.hpp"
 #include "gravity.hpp"
 
-
 class Game {
 	// TODO: something here.
 public:
@@ -27,6 +26,7 @@ public:
 	std::list<Rock*>::iterator deleteRock(Rock *);
 
 	Sea* sea;
+	Ship* ship;
 	std::list<Wave*> waves;
 	std::list<Rock*> rocks;
 	CollisionSystem collisionSystem;

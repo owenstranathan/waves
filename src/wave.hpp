@@ -22,10 +22,12 @@ public:
 	float left() const;
 	float right() const;
 
-	virtual void* resolveCollision(Collidable*);
-	virtual void * accept(Visitor &);
+	virtual void accept(Visitor &);
+	virtual void accept(CollisionVisitor &, Collidable* c);
 	virtual void update(wabi::duration deltaTime);
 	virtual wabi::Rectf rect() const;
+
+// Inherited via Collidable
 
 
 	// Sea *sea;
@@ -36,7 +38,8 @@ public:
 	float sign = 5.f;
 	float time = 0;
 	float width = 0.01;
-	float decay = 0; // decay coefficient
+	float decay = 0;
+	// decay coefficient
 };
 
 #endif // !WAVE_HPP

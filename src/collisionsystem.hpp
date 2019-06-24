@@ -39,7 +39,6 @@ public:
 	CollisionSystem(Game*);
 
 	void resolveCollisions();
-	void resolveSingleCollision(Collidable*, Collidable*);
 	void SweepAxis(unsigned int, 
 		std::list<Collidable*>&,
 		std::function<bool(wabi::Rectf, wabi::Rectf)>,
@@ -61,3 +60,13 @@ public:
 	Game* game;
 };
 
+
+class CollisionVisitor {
+public:
+	virtual void visit(Collidable*, Collidable*);
+	virtual void visit(PhysicsBody*, Collidable*);
+	virtual void visit(Sea*, Collidable*);
+	virtual void visit(Wave*, Collidable*);
+	virtual void visit(Rock*, Collidable*);
+	virtual void visit(Ship*, Collidable*);
+};

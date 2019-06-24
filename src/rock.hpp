@@ -9,13 +9,12 @@ static const float ROCK_MASS = 5.f;
 class Rock : public PhysicsBody {
 public:
 	Rock(Game* g, float r): game(g), radius(r) {
-		mass = ROCK_MASS;
+		density = 2;
 	}
 
-	virtual void* resolveCollision(Collidable*);
-	virtual void* resolveCollision(Sea*);
-	virtual void* resolveCollision(Rock*);
-	virtual void * accept(Visitor&);
+	virtual void resolveCollision(Sea*);
+	virtual void accept(Visitor&);
+	virtual void accept(CollisionVisitor&, Collidable*);
 	virtual wabi::Rectf rect() const;
 	virtual void update(wabi::duration);
 

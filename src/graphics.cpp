@@ -12,6 +12,7 @@
 
 sf::Font * const Graphics::font = new sf::Font();
 sf::Text* const Graphics::text = new sf::Text();
+float Graphics::worldToScreenRatio = 1;
 
 void Graphics::init() {
 	// font = new sf::Font();
@@ -19,6 +20,7 @@ void Graphics::init() {
 	text->setFont(*Graphics::font);
 	text->setColor(sf::Color::White);
 	text->setCharacterSize(15);
+	worldToScreenRatio = SCREEN_WIDTH * 0.00256;
 }
 
 void Graphics::cleanUp() {
@@ -53,6 +55,7 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 		colliderPairStream << "(" << c.pair.first->id << ", " << c.pair.second->id << ") ";
 	}
 	infostream << "pairs		: " << colliderPairStream.str() << std::endl;
+	infostream << "ship pos		: " << game.ship->position.x << ", " << game.ship->position.y << std::endl;
 
 	Graphics::text->setString(infostream.str());
 	Graphics::text->setPosition(3, 3);
@@ -63,22 +66,8 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Game& game) {
 	// Graphics::text->setPosition(SCREEN_WIDTH - (textBounds.width+20), (SCREEN_HEIGHT/2) - textBounds.height);
 	// rt.draw(*Graphics::text);
 	rt << game.collisionSystem;
+	// rt << *game.ship;
 	return rt;
-}
-
-void draw(sf::RenderTarget& rt, const Collidable& collider, sf::Color color) {
-	static sf::RectangleShape rectShape;
-	rectShape.setOutlineColor(color);
-	rectShape.setOutlineThickness(3);
-	rectShape.setFillColor(sf::Color(0, 0, 0, 0));
-	auto rect = collider.rect();
-	rectShape.setSize(sf::Vector2f(rect.width, rect.height));
-	rectShape.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
-	rt.draw(rectShape);
-	Graphics::text->setString(std::to_string(collider.id));
-	Graphics::text->setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left + rect.width / 2, rect.top - rect.height / 2)));
-	Graphics::text->setColor(sf::Color::White);
-	rt.draw(*Graphics::text);
 }
 
 sf::RenderTarget& operator<<(sf::RenderTarget& rt, const CollisionSystem& collisionSystem)
@@ -153,6 +142,22 @@ sf::RenderTarget& operator<<(sf::RenderTarget& rt, const Ship& ship)
 	drawRect(rt, ship.rect(), sf::Color::Magenta);
 	return rt;
 }
+
+void draw(sf::RenderTarget& rt, const Collidable& collider, sf::Color color) {
+	static sf::RectangleShape rectShape;
+	rectShape.setOutlineColor(color);
+	rectShape.setOutlineThickness(3);
+	rectShape.setFillColor(sf::Color(0, 0, 0, 0));
+	auto rect = collider.rect();
+	rectShape.setSize(sf::Vector2f(rect.width, rect.height));
+	rectShape.setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left, rect.top)));
+	rt.draw(rectShape);
+	Graphics::text->setString(std::to_string(collider.id));
+	Graphics::text->setPosition(wabi::brainToScreenSpace(sf::Vector2f(rect.left + rect.width / 2, rect.top - rect.height / 2)));
+	Graphics::text->setColor(sf::Color::White);
+	rt.draw(*Graphics::text);
+}
+
 
 template <typename T>
 void drawRect(sf::RenderTarget& rt, const wabi::Rect<T>& rect, sf::Color color) {

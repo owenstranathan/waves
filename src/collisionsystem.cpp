@@ -4,6 +4,7 @@
 #include "collidable.hpp"
 #include "game.hpp"
 #include "sea.hpp"
+#include "ship.hpp"
 #include "wave.hpp"
 #include "rock.hpp"
 
@@ -82,35 +83,9 @@ void CollisionSystem::resolveCollisions() {
 		[](wabi::Rectf r) -> float { return r.bottom(); },
 		[](wabi::Rectf r) -> float { return r.top; });
 	for (auto&& pair : activePairs) {	
-		resolveSingleCollision(pair.first, pair.second);
-		// TODO: use visitor patternt to get dynamic types and do finer collision check
-		// resolveSingleCollision(pair.first, pair.second);
+		CollisionVisitor v;
+		pair.first->accept(v, pair.second);
 	}
-}
-
-template <typename T>
-void resolveGenericCollision(T * a, Collidable*b){
-	if (Sea * sea = dynamic_cast<Sea*>(b)) {
-		a->resolveCollision(sea);
-	}
-	else if (Wave * wave = dynamic_cast<Wave*>(b)){
-		a->resolveCollision(wave);
-	}
-	else if (Rock * rock = dynamic_cast<Rock*>(b)) {
-		a->resolveCollision(rock);
-	} 
-}
-
-void CollisionSystem::resolveSingleCollision(Collidable* a, Collidable* b) {
-	if (Sea * sea = dynamic_cast<Sea*>(a)) {
-		resolveGenericCollision(sea, b);
-	}
-	else if (Wave * wave = dynamic_cast<Wave*>(a)){
-		resolveGenericCollision(wave, b);
-	}
-	else if (Rock * rock = dynamic_cast<Rock*>(a)) {
-		resolveGenericCollision(rock, b);
-	} 
 }
 
 void CollisionSystem::clear() {
@@ -124,3 +99,28 @@ size_t CollisionSystem::size() const {
 	assert(sortedByX.size() == sortedByY.size());
 	return sortedByX.size();
 }
+
+void CollisionVisitor::visit(Collidable* c1, Collidable* c2) {
+	c1->resolveCollision(c2);
+}
+
+void CollisionVisitor::visit(PhysicsBody* pb, Collidable* c) {
+	c->resolveCollision(pb);
+}
+
+void CollisionVisitor::visit(Sea* sea, Collidable* c) {
+	c->resolveCollision(sea);
+}
+
+void CollisionVisitor::visit(Rock* rock, Collidable* c) {
+	c->resolveCollision(rock);
+}
+
+void CollisionVisitor::visit(Wave* wave, Collidable* c) {
+	c->resolveCollision(wave);
+}
+
+void CollisionVisitor::visit(Ship* ship, Collidable* c) {
+	c->resolveCollision(ship);
+}
+

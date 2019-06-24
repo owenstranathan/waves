@@ -14,6 +14,7 @@ namespace wabi {
 		T bottom() const;
 		bool intersects(const Rect<T>&) const;
 		bool intersects(const Rect<T>&, Rect<T>&) const;
+		T area() const;
 		sf::Vector2<T> min() const;
 		sf::Vector2<T> max() const;
 
@@ -91,6 +92,11 @@ namespace wabi {
 		    return false;
 		}
 
+	}
+
+	template<typename T>
+	T Rect<T>::area() const {
+		return width * height;
 	}
 
 	template<typename T>

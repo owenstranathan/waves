@@ -1,6 +1,7 @@
 
 #include <cassert>
 #include "sea.hpp"
+#include "ship.hpp"
 #include "game.hpp"
 #include "wave.hpp"
 #include "rock.hpp"
@@ -11,13 +12,10 @@ Sea::Sea(Game* g, float l) : game(g), level(l) {}
 
 Sea::~Sea() { }
 
-void * Sea::accept(Visitor& v) { return v.visit(this); }
+void Sea::accept(Visitor& v) { return v.visit(this); }
 
-void* Sea::resolveCollision(Collidable*) { return nullptr; }
+void Sea::accept(CollisionVisitor& v, Collidable* c) { v.visit(this, c); }
 
-void* Sea::resolveCollision(Rock* rock) {
-	return rock->resolveCollision(this);
-}
 
 void Sea::update(wabi::duration deltaTime) { }
 
@@ -43,5 +41,20 @@ wabi::Rectf Sea::rect() const {
 	for (auto&& w : game->waves) {
 		max = std::max(max, level + w->height(w->position.x));
 	}
-	return wabi::Rectf(0.f, max, SCREEN_WIDTH, max);
+	// return wabi::Rectf(0.f, max, SCREEN_WIDTH, max);
+	return wabi::Rectf(0.f, level, SCREEN_WIDTH, level);
 }
+
+void Sea::resolveCollision(Rock* rock) {
+	rock->resolveCollision(this);
+}
+
+void Sea::resolveCollision(Ship* ship) {
+	ship->resolveCollision(this);
+}
+
+void Sea::resolveCollision(Sea* c)
+{
+	assert(false); // This should never ever happen
+}
+

@@ -11,11 +11,10 @@ Wave::Wave(Game * g, float x, float a) : game(g), startX(x), amplitude(a), posit
 
 Wave::~Wave() { }
 
-void* Wave::resolveCollision(Collidable*) {
-	return nullptr;
-}
+void Wave::accept(Visitor& v) { return v.visit(this); }
 
-void * Wave::accept(Visitor& v) { return v.visit(this); }
+void Wave::accept(CollisionVisitor& v, Collidable* c) { v.visit(this, c); }
+
 
 float Wave::height(float x) const {
 	// cool guassian

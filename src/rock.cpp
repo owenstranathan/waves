@@ -5,26 +5,9 @@
 #include "game.hpp"
 #include "visitor.hpp"
 
+void Rock::accept(Visitor& v) { return v.visit(this); }
 
-void* Rock::resolveCollision(Collidable* collider) {
-	return nullptr;
-}
-
-void* Rock::resolveCollision(Sea* sea) {
-	if (position.y < sea->height(position.x) && !hitWater) {
-		hitWater = true;
-		auto mag = wabi::magnitude(velocity) * 25;
-		return game->createWave(position.x, mag);
-	}
-	return nullptr;
-}
-
-void* Rock::resolveCollision(Rock* rock) {
-	return nullptr;
-}
-
-
-void * Rock::accept(Visitor& v) { return v.visit(this); }
+void Rock::accept(CollisionVisitor& v, Collidable* c) { v.visit(this, c); }
 
 wabi::Rectf Rock::rect() const {
 	return wabi::Rectf(position.x - radius, position.y + radius, 2 * radius, 2 * radius);
@@ -38,4 +21,11 @@ void Rock::update(wabi::duration deltaTime)
 	}
 }
 
+void Rock::resolveCollision(Sea* sea) {
+	if (position.y < sea->height(position.x) && !hitWater) {
+		hitWater = true;
+		auto mag = wabi::magnitude(velocity) * 25;
+		game->createWave(position.x, mag);
+	}
+}
 

@@ -12,10 +12,13 @@ public:
 	Sea(Game*, float);
 	~Sea();
 
-	virtual void* resolveCollision(Collidable*);
-	virtual void* resolveCollision(Rock*);
+	virtual void resolveCollision(Sea* c) override;
+	virtual void resolveCollision(Ship* c) override;
+	virtual void resolveCollision(Rock* c) override;
 
-	virtual void* accept(Visitor&);
+
+	virtual void accept(Visitor&);
+	virtual void accept(CollisionVisitor&, Collidable*);
 	virtual void update(wabi::duration deltaTime);
 	float height(float x) const;
 	float slope(float x) const;
@@ -24,6 +27,8 @@ public:
 	// std::list<Wave*> waves;
 	float level;
 	Game* game;
-};
+
+	// Inherited via Collidable
+	};
 
 
