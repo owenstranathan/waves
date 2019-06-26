@@ -26,21 +26,20 @@ int main()
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 100;
 	auto videoMode = sf::VideoMode::getDesktopMode();
-	SCREEN_HEIGHT = videoMode.height;
-	SCREEN_WIDTH = videoMode.width;
-	std::cout << SCREEN_HEIGHT << " " << SCREEN_WIDTH << std::endl;
+	// SCREEN_HEIGHT = videoMode.height;
+	// SCREEN_WIDTH = videoMode.width;
+	// std::cout << SCREEN_HEIGHT << " " << SCREEN_WIDTH << std::endl;
 	// sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
-	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::Default, settings);
+	sf::RenderWindow window(videoMode, "Waves!", sf::Style::Default, settings);
 	window.setFramerateLimit(100);
 
 
 	Game game(SEA_LEVEL);
-	Graphics graphics(&game, &window);
+	Graphics graphics(&game, &window, videoMode);
 	// game loop
 	while (!game.over && window.isOpen())
 	{
 		game.update();
-
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window.pollEvent(event))

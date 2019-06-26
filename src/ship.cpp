@@ -6,6 +6,7 @@
 #include "ship.hpp"
 #include "rect.hpp"
 #include "utils.hpp"
+#include "wave.hpp"
 
 
 Ship::Ship(Game* g, sf::Vector2f p, float w, float h) : width(w), height(h) { game = g; position = p; density = 2.f; }
@@ -24,22 +25,11 @@ void Ship::accept(CollisionVisitor& v, Collidable* c)
 	v.visit(this, c);
 }
 
-void Ship::update(const wabi::duration& deltaTime)
+void Ship::update(const float deltaTime)
 {
-	// Call base class update to do all the kinematics and shit.
-	// auto seaHeight = game->sea->height(position.x);
-	// if (rect().bottom() < seaHeight) {
-	// 	if (wabi::sign(velocity.y) < 0 || rect().top< seaHeight) {
-	// 		auto drag = dragForce(game->sea->density);
-	// 		addForce(drag);
-	// 	}
-	// 	else {
-	// 		auto drag = dragForce(10.225f);
-	// 		addForce(drag);
-	// 	}
-	// }
-	PhysicsBody::update(deltaTime);	
 	Gravity::apply(*this, deltaTime);
+	addForce(dragForce(0.1225f)); // always drag for air I guess, maybe we don't need this, but let's keep it for now.
+	PhysicsBody::update(deltaTime);	
 }
 
 wabi::Rectf Ship::rect() const
@@ -47,14 +37,25 @@ wabi::Rectf Ship::rect() const
 	return wabi::Rectf(position.x-(width/2.f), position.y+(height/2.f), width, height);
 }
 
-void Ship::resolveCollision(Sea* s) {
+void Ship::resolveCollision(Sea* sea) {
 	wabi::Rectf overlap;
-	rect().intersects(s->rect(), overlap);
-	// sf::Vector2f buoyancy = sf::Vector2f();
+	rect().intersects(sea->rect(), overlap);
 	auto g = Gravity::constant;
-	// buoyancy.y = game->sea->density * overlap.height * -g;
-	// addForce(buoyancy);	
-	auto force = -1.f * velocity * -g;
-	addForce(force);
+	addForce(sf::Vector2f(0, -g * overlap.height));
+	addForce(dragForce(1));
 }
+
+void Ship::resolveCollision(Wave* wave) {
+	auto waveHeight = wave->height(position.x) + game->sea->level;
+	if (rect().bottom() > waveHeight)
+		return;
+	auto waveRect = wabi::Rectf(0, waveHeight, game->worldWidth, waveHeight);
+	wabi::Rectf overlap;
+	rect().intersects(waveRect, overlap);
+	auto g = Gravity::constant;
+	addForce(sf::Vector2f(0, -g *  overlap.height));
+	// addForce(dragForce(1));
+}
+
+
 

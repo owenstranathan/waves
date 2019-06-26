@@ -30,7 +30,8 @@ public:
 	std::list<Wave*> waves;
 	std::list<Rock*> rocks;
 	CollisionSystem collisionSystem;
-	wabi::Time time;
+	sf::Clock clock;
+	float deltaTime = 0.f;
 	std::stringstream log;
 	bool over = false;
 	bool won = false;
@@ -39,6 +40,3 @@ public:
 	const float fixedStep = 0.02555f;
 	float timeSinceLastUpdate = 0.0f;
 };
-
-
-// NOTES:

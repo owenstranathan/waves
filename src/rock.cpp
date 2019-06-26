@@ -13,10 +13,10 @@ wabi::Rectf Rock::rect() const {
 	return wabi::Rectf(position.x - radius, position.y + radius, 2 * radius, 2 * radius);
 }
 
-void Rock::update(const wabi::duration& deltaTime) {
+void Rock::update(const float deltaTime) {
 	Gravity::apply(*this, deltaTime);
 	PhysicsBody::update(deltaTime);
-	if (position.y > SCREEN_HEIGHT || position.x > SCREEN_WIDTH || position.x < 0 || position.y < 0) {
+	if (position.y > game->worldHeight || position.x > game->worldWidth || position.x < 0 || position.y < 0) {
 		active = false;
 	}
 }
@@ -24,8 +24,8 @@ void Rock::update(const wabi::duration& deltaTime) {
 void Rock::resolveCollision(Sea* sea) {
 	if (position.y < sea->height(position.x) && !hitWater) {
 		hitWater = true;
-		auto mag = wabi::magnitude(velocity) * 25;
-		game->createWave(position.x, mag);
+		auto mag = wabi::magnitude(velocity);
+		game->createWave(position.x, mass() * wabi::magnitude(velocity));
 	}
 }
 

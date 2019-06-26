@@ -7,9 +7,9 @@
 
 class PhysicsBody : public Collidable {
 public:
-	virtual void update(const wabi::duration&);
+	virtual void update(const float);
 	virtual sf::Vector2f dragForce(const float);
-	inline float mass() { return rect().area() * density;  }
+	virtual float mass() { return rect().area() * density;  }
 	void addForce(const sf::Vector2f&);
 
 	bool useGravity = true;

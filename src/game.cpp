@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "game.hpp"
+#include "graphics.hpp"
 #include "sea.hpp"
 #include "ship.hpp"
 #include "rock.hpp"
@@ -10,8 +11,8 @@ const float Game::worldWidth = 128; // meters
 const float Game::worldHeight = 72; // meters
 
 Game::Game(float seaLevel) : 
-	sea(new Sea(this, seaLevel)), ship(new Ship(this, sf::Vector2f(worldWidth/2, worldHeight), 5, 3)),
-	collisionSystem(this), time() {
+	sea(new Sea(this, seaLevel)), ship(new Ship(this, sf::Vector2f(worldWidth/2, worldHeight/3), 5, 3)),
+	collisionSystem(this) {
 	collisionSystem.addCollider(sea);
 	collisionSystem.addCollider(ship);
 }
@@ -24,30 +25,32 @@ Game::~Game() {
 }
 
 void Game::update() {
-	time.keepTime();
-	timeSinceLastUpdate += time.deltaTime.count();
-	//if (timeSinceLastUpdate >= fixedStep) {
-	sea->update(time.deltaTime);
-	ship->update(time.deltaTime);
-	// Housekeeping.. killing rocks and waves
-	for (auto it = waves.begin(); it != waves.end(); std::advance(it, 1)) {
-		auto wave = *it;
-		wave->update(time.deltaTime);
-		if (!wave->active)
-			it = deleteWave(wave);
-		if (it == waves.end())
-			break;
+	deltaTime = clock.restart().asSeconds();
+	timeSinceLastUpdate += deltaTime;
+	if (timeSinceLastUpdate >= fixedStep) {
+		deltaTime = timeSinceLastUpdate;
+		collisionSystem.resolveCollisions(); // It's somehow important to resolve collisions first
+		sea->update(deltaTime);
+		ship->update(deltaTime);
+		// Housekeeping.. killing rocks and waves
+		for (auto it = waves.begin(); it != waves.end(); std::advance(it, 1)) {
+			auto wave = *it;
+			wave->update(deltaTime);
+			if (!wave->active)
+				it = deleteWave(wave);
+			if (it == waves.end())
+				break;
+		}
+		for (auto it = rocks.begin(); it != rocks.end(); ++it) {
+			auto rock = *it;
+			rock->update(deltaTime);
+			if (!rock->active)
+				it = deleteRock(rock);
+			if (it == rocks.end())
+				break;
+		}
+		timeSinceLastUpdate = 0.f;
 	}
-	for (auto it = rocks.begin(); it != rocks.end(); ++it) {
-		auto rock = *it;
-		rock->update(time.deltaTime);
-		if (!rock->active)
-			it = deleteRock(rock);
-		if (it == rocks.end())
-			break;
-	}
-	collisionSystem.resolveCollisions();
-	timeSinceLastUpdate = 0.f;
 }
 
 
@@ -73,7 +76,7 @@ std::list<Wave*>::iterator Game::deleteWave(Wave* wave) {
 }
 
 Rock* Game::createRock(sf::Vector2f position) {
-	auto rock = new Rock(this, 50);
+	auto rock = new Rock(this, 1.5);
 	rock->position = position;
 	rocks.push_back(rock);
 	collisionSystem.addCollider(rock);
@@ -98,12 +101,12 @@ void Game::handleEvent(sf::Event& event) {
 	static bool mousePressed = false;
 	static sf::Vector2f mousePosition;
 	if (event.type == sf::Event::MouseButtonPressed && ! mousePressed) {
-		// mousePosition = screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
-		// mousePressed = true;
+		mousePosition = (sf::Vector2f)Graphics::screen2GamePos(sf::Mouse::getPosition());
+		mousePressed = true;
 	}
 	else if (event.type == sf::Event::MouseButtonReleased) {
-		// createRock(mousePosition);
-		// mousePressed = false;
+		createRock(mousePosition);
+		mousePressed = false;
 	}
 	else if (event.type == sf::Event::KeyPressed) {
 	}

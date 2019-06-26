@@ -13,8 +13,9 @@ public:
 
 	virtual void accept(Visitor&) override;
 	virtual void accept(CollisionVisitor&, Collidable*) override;
-	virtual void resolveCollision(Sea * c) override;
-	virtual void update(const wabi::duration&) override;
+	virtual void resolveCollision(Sea *) override;
+	virtual void resolveCollision(Wave*) override;
+	virtual void update(const float) override;
 	virtual wabi::Rectf rect() const override;
 
 	float width;

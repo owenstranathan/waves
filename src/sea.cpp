@@ -19,7 +19,7 @@ void Sea::accept(Visitor& v) { return v.visit(this); }
 void Sea::accept(CollisionVisitor& v, Collidable* c) { v.visit(this, c); }
 
 
-void Sea::update(const wabi::duration& ) { }
+void Sea::update(const float) { }
 
 float Sea::slope(float x) const {
 	float m = 0;

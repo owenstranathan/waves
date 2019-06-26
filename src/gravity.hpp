@@ -9,7 +9,8 @@
 class Gravity {
 public:
 
-	static void apply(PhysicsBody& pb, wabi::duration deltaTime);
+	static void apply(PhysicsBody& pb, const float deltaTime);
+	static const sf::Vector2f force;
 	static const float constant;
 };
 
