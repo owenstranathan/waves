@@ -7,15 +7,16 @@
 class Ship : public PhysicsBody{
 public:	
 
-	Ship(sf::Vector2f, float, float);
-	Ship(sf::Vector2f, sf::Vector2f);
+	Ship(Game*, sf::Vector2f, float, float);
+	Ship(Game*, sf::Vector2f, sf::Vector2f);
 	~Ship();
 
-	virtual void accept(Visitor&);
-	virtual void accept(CollisionVisitor&, Collidable*);
-	virtual void resolveCollision(Sea * c);
-	virtual void update(wabi::duration);
-	virtual wabi::Rectf rect() const;
+	virtual void accept(Visitor&) override;
+	virtual void accept(CollisionVisitor&, Collidable*) override;
+	virtual void resolveCollision(Sea *) override;
+	virtual void resolveCollision(Wave*) override;
+	virtual void update(const float) override;
+	virtual wabi::Rectf rect() const override;
 
 	float width;
 	float height;

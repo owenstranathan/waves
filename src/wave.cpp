@@ -26,9 +26,9 @@ float Wave::slope(float x) const {
 	return height(x) * (-2 * width * (x - position.x) * width);
 }
 
-void Wave::update(wabi::duration deltaTime) {
-	auto dt = deltaTime.count();
-	time += dt * 100;
+void Wave::update(const float deltaTime) {
+	// time += deltaTime * 100;
+	time += deltaTime * 50;
 	position.x = startX + time;
 	if (decay >= 1.f) {
 		sign = -0.5f;
@@ -37,7 +37,9 @@ void Wave::update(wabi::duration deltaTime) {
 		decay = 0;
 		active = false;
 	}
-	decay = decay + sign * dt;
+	decay = decay + sign * deltaTime;
+	// width = width + sign * deltaTime;
+
 }
 
 float Wave::left() const {

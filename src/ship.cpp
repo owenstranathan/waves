@@ -1,15 +1,17 @@
 #include <iostream>
 
-#include "utils.hpp"
-#include "ship.hpp"
+#include "game.hpp"
 #include "gravity.hpp"
 #include "sea.hpp"
+#include "ship.hpp"
 #include "rect.hpp"
+#include "utils.hpp"
+#include "wave.hpp"
 
 
-Ship::Ship(sf::Vector2f p, float w, float h) : width(w), height(h) { position = p; density = 0.5f; }
+Ship::Ship(Game* g, sf::Vector2f p, float w, float h) : width(w), height(h) { game = g; position = p; density = 2.f; }
 
-Ship::Ship(sf::Vector2f p, sf::Vector2f size) : width(size.x), height(size.y) { position = p;  density = 0.5f; }
+Ship::Ship(Game* g, sf::Vector2f p, sf::Vector2f size) : width(size.x), height(size.y) { game = g; position = p;  density = 2.f; }
 
 Ship::~Ship() { }
 
@@ -23,33 +25,37 @@ void Ship::accept(CollisionVisitor& v, Collidable* c)
 	v.visit(this, c);
 }
 
-void Ship::update(wabi::duration deltaTime)
+void Ship::update(const float deltaTime)
 {
-	// Call base class update to do all the kinematics and shit.
+	Gravity::apply(*this, deltaTime);
+	addForce(dragForce(0.1225f)); // always drag for air I guess, maybe we don't need this, but let's keep it for now.
 	PhysicsBody::update(deltaTime);	
-	if (wabi::sign(velocity.y) > 0) {
-		drag(1.2);
-	}
-	else {
-		drag(0);
-	}
 }
 
 wabi::Rectf Ship::rect() const
 {
-	// We do eventually want to set the origin on the rect but for know I need this
 	return wabi::Rectf(position.x-(width/2.f), position.y+(height/2.f), width, height);
 }
 
-void Ship::resolveCollision(Sea* s) {
+void Ship::resolveCollision(Sea* sea) {
 	wabi::Rectf overlap;
-	rect().intersects(s->rect(), overlap);
-	sf::Vector2f buoyancy = sf::Vector2f();
+	rect().intersects(sea->rect(), overlap);
 	auto g = Gravity::constant;
-	// auto magic = (1 / (0.1 * std::max(width, height)));
-	auto magic = 1000 / rect().area();
-	// buoyancy.y = 0.0475 * overlap.height * -g;
-	buoyancy.y = magic * overlap.height * -g;
-	addForce(buoyancy);	
+	addForce(sf::Vector2f(0, -g * overlap.height));
+	addForce(dragForce(1));
 }
+
+void Ship::resolveCollision(Wave* wave) {
+	auto waveHeight = wave->height(position.x) + game->sea->level;
+	if (rect().bottom() > waveHeight)
+		return;
+	auto waveRect = wabi::Rectf(0, waveHeight, game->worldWidth, waveHeight);
+	wabi::Rectf overlap;
+	rect().intersects(waveRect, overlap);
+	auto g = Gravity::constant;
+	addForce(sf::Vector2f(0, -g *  overlap.height));
+	// addForce(dragForce(1));
+}
+
+
 

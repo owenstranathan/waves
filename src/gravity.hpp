@@ -8,13 +8,9 @@
 
 class Gravity {
 public:
-	Gravity(Game *);
-	~Gravity();
 
-	void apply(PhysicsBody& pb, wabi::duration deltaTime);
-
+	static void apply(PhysicsBody& pb, const float deltaTime);
+	static const sf::Vector2f force;
 	static const float constant;
-
-	Game* game;
 };
 

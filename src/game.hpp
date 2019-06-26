@@ -9,7 +9,6 @@
 #include "graphics.hpp"
 
 class Game {
-	// TODO: something here.
 public:
 
 	Game(float);
@@ -31,35 +30,13 @@ public:
 	std::list<Wave*> waves;
 	std::list<Rock*> rocks;
 	CollisionSystem collisionSystem;
-	Gravity gravity;
-	wabi::Time time;
+	sf::Clock clock;
+	float deltaTime = 0.f;
 	std::stringstream log;
 	bool over = false;
 	bool won = false;
 	static const float worldWidth;
 	static const float worldHeight;
+	const float fixedStep = 0.02555f;
+	float timeSinceLastUpdate = 0.0f;
 };
-
-template <typename T>
-inline sf::Vector2<T> brainToScreenSpace(const sf::Vector2<T> in) {
-	return sf::Vector2<T>(in.x, (SCREEN_HEIGHT - in.y));
-}
-
-template <typename T>
-inline sf::Vector2<T> screenToBrainSpace(const sf::Vector2<T> in) {
-	return sf::Vector2<T>(in.x, abs(SCREEN_HEIGHT - in.y));
-}
-
-template <typename T>
-inline sf::Vector2<T> toWorld(const sf::Vector2<T> in) {
-	// TODO: fuck. implement scalign
-	return screenToBrainSpace(in) / Graphics::worldToScreenRatio;
-}
-
-template <typename T>
-inline  sf::Vector2<T> toScreen(const sf::Vector2<T> in) {
-	// TODO: fuck. implement scalign
-	auto v = sf::Vector2<T>(in.x * Graphics::worldToScreenRatio, (Game::worldHeight - in.y) * Graphics::worldToScreenRatio)
-	return * Graphics::worldToScreenRatio;
-}
-

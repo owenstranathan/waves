@@ -19,10 +19,10 @@ public:
 	float left() const;
 	float right() const;
 
-	virtual void accept(Visitor &);
-	virtual void accept(CollisionVisitor &, Collidable* c);
-	virtual void update(wabi::duration deltaTime);
-	virtual wabi::Rectf rect() const;
+	virtual void accept(Visitor &)override ;
+	virtual void accept(CollisionVisitor &, Collidable* c)override;
+	virtual void update(const float) override;
+	virtual wabi::Rectf rect() const override;
 
 // Inherited via Collidable
 
@@ -34,7 +34,8 @@ public:
 	float amplitude;
 	float sign = 5.f;
 	float time = 0;
-	float width = 0.01;
+	//float width = 0.01;
+	float width = 0.1;
 	float decay = 0;
 	// decay coefficient
 };

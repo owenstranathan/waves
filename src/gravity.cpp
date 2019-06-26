@@ -1,12 +1,11 @@
 #include "gravity.hpp"
 #include "physicsbody.hpp"
 
-const float Gravity::constant = -19.8f;
+// const float Gravity::constant = -19.8f;
+const float Gravity::constant = -9.8f;
+const sf::Vector2f Gravity::force = sf::Vector2f(0, Gravity::constant);
 
-Gravity::Gravity(Game* g) : game(g) {}
-Gravity::~Gravity() {}
-
-void Gravity::apply(PhysicsBody& pb, wabi::duration deltaTime) {
-	// pb.velocity += sf::Vector2f(0, constant * deltaTime.count());
-	pb.addForce(sf::Vector2f(0, constant));
+void Gravity::apply(PhysicsBody& pb, const float deltaTime) {
+	//pb.velocity += sf::Vector2f(0, constant);
+	pb.addForce(force);
 }

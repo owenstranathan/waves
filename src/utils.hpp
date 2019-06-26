@@ -13,31 +13,14 @@
 
 #include "rect.hpp"
 
-extern int SCREEN_HEIGHT;
-extern int SCREEN_WIDTH;
+// extern int SCREEN_HEIGHT;
+// extern int SCREEN_WIDTH;
 extern const float ALMOST_ZERO;
 
 
 namespace wabi
 {
-
-	typedef std::chrono::time_point<std::chrono::system_clock> timepoint;
-	typedef std::chrono::duration<float> duration;
-
-	class Time {
-	public:
-		static duration deltaTime;
-		static duration totalTime;
-		static timepoint start;
-		static timepoint end;
-
-		Time() { }
-		void keepTime();
-		void reset();
-		
-	};
 	
-
 	template <typename T>
 	T randomNumber(T start, T end)
 	{
