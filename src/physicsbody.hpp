@@ -7,15 +7,10 @@
 
 class PhysicsBody : public Collidable {
 public:
-
-	// PhysicsBody();
-	// PhysicsBody(sf::Vector2f);
-	// ~PhysicsBody();
-
-	virtual void update(wabi::duration deltaTime);
-	virtual void drag(float);
+	virtual void update(const wabi::duration&);
+	virtual sf::Vector2f dragForce(const float);
 	inline float mass() { return rect().area() * density;  }
-	inline void addForce(sf::Vector2f force) { acceleration += force * wabi::Time::deltaTime.count(); }
+	void addForce(const sf::Vector2f&);
 
 	bool useGravity = true;
 	float density = 1;

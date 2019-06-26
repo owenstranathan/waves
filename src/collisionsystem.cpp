@@ -17,11 +17,9 @@ CollisionSystem::CollisionSystem(Game* g) : game(g) {}
 void CollisionSystem::addCollider(Collidable* collidable) {
 	wabi::insert_sorted(sortedByX, collidable, by_x);
 	wabi::insert_sorted(sortedByY, collidable, by_y);
-	// colliders.push_back(collidable);
 }
 
 void CollisionSystem::removeCollider(Collidable* collidable) {
-	// colliders.remove(collidable);
 	sortedByX.remove(collidable);
 	sortedByY.remove(collidable);
 	pairs.clear();
@@ -89,7 +87,6 @@ void CollisionSystem::resolveCollisions() {
 }
 
 void CollisionSystem::clear() {
-	// colliders.clear();
 	sortedByX.clear();
 	sortedByY.clear();
 	pairs.clear();

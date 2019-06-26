@@ -26,7 +26,7 @@ float Wave::slope(float x) const {
 	return height(x) * (-2 * width * (x - position.x) * width);
 }
 
-void Wave::update(wabi::duration deltaTime) {
+void Wave::update(const wabi::duration& deltaTime) {
 	auto dt = deltaTime.count();
 	time += dt * 100;
 	position.x = startX + time;

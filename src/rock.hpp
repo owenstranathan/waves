@@ -13,11 +13,11 @@ public:
 		density = 2;
 	}
 
-	virtual void resolveCollision(Sea*);
-	virtual void accept(Visitor&);
-	virtual void accept(CollisionVisitor&, Collidable*);
-	virtual wabi::Rectf rect() const;
-	virtual void update(wabi::duration);
+	virtual void resolveCollision(Sea*) override;
+	virtual void accept(Visitor&) override;
+	virtual void accept(CollisionVisitor&, Collidable*) override;
+	virtual wabi::Rectf rect() const override;
+	virtual void update(const wabi::duration&) override;
 
 	float radius;
 	bool hitWater = false;

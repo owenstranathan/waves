@@ -19,10 +19,10 @@ public:
 	float left() const;
 	float right() const;
 
-	virtual void accept(Visitor &);
-	virtual void accept(CollisionVisitor &, Collidable* c);
-	virtual void update(wabi::duration deltaTime);
-	virtual wabi::Rectf rect() const;
+	virtual void accept(Visitor &)override ;
+	virtual void accept(CollisionVisitor &, Collidable* c)override;
+	virtual void update(const wabi::duration&) override;
+	virtual wabi::Rectf rect() const override;
 
 // Inherited via Collidable
 

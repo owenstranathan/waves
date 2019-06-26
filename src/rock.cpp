@@ -13,8 +13,8 @@ wabi::Rectf Rock::rect() const {
 	return wabi::Rectf(position.x - radius, position.y + radius, 2 * radius, 2 * radius);
 }
 
-void Rock::update(wabi::duration deltaTime)
-{
+void Rock::update(const wabi::duration& deltaTime) {
+	Gravity::apply(*this, deltaTime);
 	PhysicsBody::update(deltaTime);
 	if (position.y > SCREEN_HEIGHT || position.x > SCREEN_WIDTH || position.x < 0 || position.y < 0) {
 		active = false;

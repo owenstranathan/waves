@@ -52,7 +52,6 @@ public:
 		return sortedByX;
 	}
 	
-	// std::list<Collidable*> colliders;
 	std::unordered_map<std::pair<int, int>, Collider, PairHash> pairs;
 	std::list<std::pair<Collidable*, Collidable*>> activePairs;
 	std::list<Collidable*> sortedByX;

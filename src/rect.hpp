@@ -59,9 +59,7 @@ namespace wabi {
 	bool Rect<T>::intersects(const Rect<T>& rectangle, Rect<T>& intersection) const {  
 		// Straight up copied this from sf::Rect 
 		// I just need this to function in my special space. I think maybe inverting the world is not worth the effort
-
 		// Rectangles with negative dimensions are allowed, so we must handle them correctly
-
 		// Compute the min and max of the first rectangle on both axes
 		T r1MinX = std::min(left, right());
 		T r1MaxX = std::max(left, right());
@@ -76,14 +74,14 @@ namespace wabi {
 
 		// Compute the intersection boundaries
 		T interLeft   = std::max(r1MinX, r2MinX);
-		T interTop    = std::max(r1MinY, r2MinY);
 		T interRight  = std::min(r1MaxX, r2MaxX);
-		T interBottom = std::min(r1MaxY, r2MaxY);
+		T interTop	  = std::min(r1MaxY, r2MaxY);
+		T interBottom = std::max(r1MinY, r2MinY);
 
 		// If the intersection is valid (positive non zero area), then there is an intersection
-		if ((interLeft < interRight) && (interTop < interBottom))
+		if ((interLeft < interRight) && (interBottom < interTop))
 		{	    
-			intersection = Rect<T>(interLeft, interTop, interRight - interLeft, interBottom - interTop);
+			intersection = Rect<T>(interLeft, interTop, interRight - interLeft, interTop - interBottom);
 		    return true;
 		}
 		else
@@ -114,3 +112,19 @@ namespace wabi {
 	typedef Rect<double> Rectd;
 }
 
+namespace sf {
+	typedef Rect<float> Rectf;
+	typedef Rect<int> Recti;
+	typedef Rect<double> Rectd;
+
+}
+
+template <typename T, typename U>
+wabi::Rect<T> operator*(wabi::Rect<T> rect, U scalar) {
+	return wabi::Rect<T>(rect.left * scalar, rect.top * scalar, rect.width * scalar, rect.height * scalar);
+}
+
+template <typename T, typename U>
+sf::Rect<T> operator*(sf::Rect<T> rect, U scalar) {
+	return sf::Rect<T>(rect.left * scalar, rect.top * scalar, rect.width * scalar, rect.height * scalar);
+}

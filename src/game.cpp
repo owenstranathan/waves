@@ -6,14 +6,12 @@
 #include "rock.hpp"
 #include "wave.hpp"
 
-const float Game::worldWidth = 25.6;
-const float Game::worldHeight = 14.4;
+const float Game::worldWidth = 128; // meters
+const float Game::worldHeight = 72; // meters
 
 Game::Game(float seaLevel) : 
-	sea(new Sea(this, seaLevel)), ship(new Ship(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT-200 ), 75, 75)),
-	collisionSystem(this), gravity(this), time()
-	// worldWidth(25.6), worldHeight
-{
+	sea(new Sea(this, seaLevel)), ship(new Ship(this, sf::Vector2f(worldWidth/2, worldHeight), 5, 3)),
+	collisionSystem(this), time() {
 	collisionSystem.addCollider(sea);
 	collisionSystem.addCollider(ship);
 }
@@ -27,8 +25,9 @@ Game::~Game() {
 
 void Game::update() {
 	time.keepTime();
+	timeSinceLastUpdate += time.deltaTime.count();
+	//if (timeSinceLastUpdate >= fixedStep) {
 	sea->update(time.deltaTime);
-	gravity.apply(*ship, time.deltaTime);
 	ship->update(time.deltaTime);
 	// Housekeeping.. killing rocks and waves
 	for (auto it = waves.begin(); it != waves.end(); std::advance(it, 1)) {
@@ -38,23 +37,19 @@ void Game::update() {
 			it = deleteWave(wave);
 		if (it == waves.end())
 			break;
-	}	
+	}
 	for (auto it = rocks.begin(); it != rocks.end(); ++it) {
 		auto rock = *it;
-		gravity.apply(*rock, time.deltaTime);
 		rock->update(time.deltaTime);
 		if (!rock->active)
 			it = deleteRock(rock);
 		if (it == rocks.end())
 			break;
 	}
-
 	collisionSystem.resolveCollisions();
-	auto max_size = 1000;
-	if (log.str().size() > max_size) {
-		log.clear();
-	}
+	timeSinceLastUpdate = 0.f;
 }
+
 
 Wave* Game::createWave(float position, float magnitude) {
 	Wave * wave = new Wave(this, position, magnitude);
@@ -103,42 +98,13 @@ void Game::handleEvent(sf::Event& event) {
 	static bool mousePressed = false;
 	static sf::Vector2f mousePosition;
 	if (event.type == sf::Event::MouseButtonPressed && ! mousePressed) {
-		mousePosition = screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
-		mousePressed = true;
+		// mousePosition = screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
+		// mousePressed = true;
 	}
 	else if (event.type == sf::Event::MouseButtonReleased) {
-		createRock(mousePosition);
-		// auto currMousePos = wabi::screenToBrainSpace((sf::Vector2f)sf::Mouse::getPosition());
-		// auto size = sf::Vector2f(currMousePos.x - mousePosition.x, currMousePos.y - mousePosition.y);
-		// auto absSize = sf::Vector2f(std::abs(size.x), abs(size.y));
-		// auto xSign = size.x / abs(size.x);
-		// auto ySign = size.y / abs(size.y);
-		// Ship* ship;
-		// if (xSign > 0 && ySign < 0) {		
-		// 	ship = new Ship(mousePosition, absSize);
-		// }
-		// else if (xSign > 0 && ySign > 0) {
-		// 	auto startPos = sf::Vector2f(mousePosition.x, mousePosition.y + absSize.y);
-		// 	ship = new Ship(startPos, absSize);
-		// }
-		// else if(xSign < 0 && ySign > 0) {
-		// 	ship = new Ship(currMousePos, absSize);
-		// }
-		// else{ // (xSign < 0 && ySign < 0) {
-		// 	auto startPos = sf::Vector2f(currMousePos.x, currMousePos.y + absSize.y);
-		// 	ship = new Ship(startPos, absSize);
-		// }
-		// collisionSystem.addCollider(ship);
-		mousePressed = false;
+		// createRock(mousePosition);
+		// mousePressed = false;
 	}
 	else if (event.type == sf::Event::KeyPressed) {
-		// std::cout << event.key.code << std::endl;
-		// switch (event.key.code)
-		// {
-		// case sf::Keyboard::C:
-		// 	collisionSystem.clear();
-		// default:
-		// 	break;
-		// }
 	}
 }
