@@ -45,11 +45,11 @@ wabi::Rectf Sea::rect() const {
 	return wabi::Rectf(0.f, level, game->worldWidth, FLT_MAX/2); 
 }
 
-void Sea::resolveCollision(Rock* rock) {
-	rock->resolveCollision(this);
+void Sea::collisionEnter(Rock* rock) {
+	rock->collisionEnter(this);
 }
 
-void Sea::resolveCollision(Ship* ship) {
-	ship->resolveCollision(this);
+void Sea::collisionEnter(Ship* ship) {
+	ship->collisionEnter(this);
 }
 

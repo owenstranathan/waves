@@ -10,10 +10,10 @@
 class Sea : public Collidable {
 public:
 	Sea(Game*, float);
-	~Sea();
+	virtual ~Sea();
 
-	virtual void resolveCollision(Ship* c) override;
-	virtual void resolveCollision(Rock* c) override;
+	virtual void collisionEnter(Ship* c) override;
+	virtual void collisionEnter(Rock* c) override;
 
 
 	virtual void accept(Visitor&)override;

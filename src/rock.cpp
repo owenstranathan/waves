@@ -21,7 +21,7 @@ void Rock::update(const float deltaTime) {
 	}
 }
 
-void Rock::resolveCollision(Sea* sea) {
+void Rock::collisionEnter(Sea* sea) {
 	if (position.y < sea->height(position.x) && !hitWater) {
 		hitWater = true;
 		auto mag = wabi::magnitude(velocity);

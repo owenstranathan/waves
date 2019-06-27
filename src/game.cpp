@@ -13,13 +13,13 @@ const float Game::worldHeight = 72; // meters
 Game::Game(float seaLevel) : 
 	sea(new Sea(this, seaLevel)), ship(new Ship(this, sf::Vector2f(worldWidth/2, worldHeight/3), 5, 3)),
 	collisionSystem(this) {
-	collisionSystem.addCollider(sea);
-	collisionSystem.addCollider(ship);
+	collisionSystem.addCollidable(sea);
+	collisionSystem.addCollidable(ship);
 }
 
 Game::~Game() { 
-	collisionSystem.removeCollider(sea);
-	collisionSystem.removeCollider(ship);
+	collisionSystem.removeCollidable(sea);
+	collisionSystem.removeCollidable(ship);
 	delete sea;
 	delete ship;
 }
@@ -28,26 +28,20 @@ void Game::update() {
 	deltaTime = clock.restart().asSeconds();
 	timeSinceLastUpdate += deltaTime;
 	if (timeSinceLastUpdate >= fixedStep) {
+		cleanUp();
 		deltaTime = timeSinceLastUpdate;
 		collisionSystem.resolveCollisions(); // It's somehow important to resolve collisions first
 		sea->update(deltaTime);
 		ship->update(deltaTime);
-		// Housekeeping.. killing rocks and waves
-		for (auto it = waves.begin(); it != waves.end(); std::advance(it, 1)) {
-			auto wave = *it;
-			wave->update(deltaTime);
-			if (!wave->active)
-				it = deleteWave(wave);
-			if (it == waves.end())
-				break;
+		if (!ship->active) {
+			// over = true;
 		}
-		for (auto it = rocks.begin(); it != rocks.end(); ++it) {
-			auto rock = *it;
+		// Housekeeping.. killing rocks and waves
+		for (auto&& wave : waves) {
+			wave->update(deltaTime);
+		}
+		for (auto&& rock : rocks) {
 			rock->update(deltaTime);
-			if (!rock->active)
-				it = deleteRock(rock);
-			if (it == rocks.end())
-				break;
 		}
 		timeSinceLastUpdate = 0.f;
 	}
@@ -57,16 +51,17 @@ void Game::update() {
 Wave* Game::createWave(float position, float magnitude) {
 	Wave * wave = new Wave(this, position, magnitude);
 	waves.push_back(wave);
-	collisionSystem.addCollider(wave);
+	collisionSystem.addCollidable(wave);
 	return wave;
 }
 
 
 std::list<Wave*>::iterator Game::deleteWave(std::list<Wave*>::iterator it) {
 	auto wave = *it;
-	collisionSystem.removeCollider(wave);
+	collisionSystem.removeCollidable(wave);
 	it = waves.erase(it);
-	delete wave;
+	_delete_me.push_back(wave);
+	// delete wave;
 	return it;
 }
 
@@ -79,15 +74,16 @@ Rock* Game::createRock(sf::Vector2f position) {
 	auto rock = new Rock(this, 1.5);
 	rock->position = position;
 	rocks.push_back(rock);
-	collisionSystem.addCollider(rock);
+	collisionSystem.addCollidable(rock);
 	return rock;
 }
 
 std::list<Rock*>::iterator Game::deleteRock(std::list<Rock*>::iterator it) {
 	auto rock = *it;
-	collisionSystem.removeCollider(rock);
+	collisionSystem.removeCollidable(rock);
 	it = rocks.erase(it);
-	delete rock;
+	_delete_me.push_back(rock);
+	// delete rock;
 	return it;
 }
 
@@ -109,5 +105,23 @@ void Game::handleEvent(sf::Event& event) {
 		mousePressed = false;
 	}
 	else if (event.type == sf::Event::KeyPressed) {
+	}
+}
+
+void Game::cleanUp()
+{
+	for (auto it = waves.begin(); it != waves.end(); std::advance(it, 1)) {
+		auto wave = *it;
+		if (!wave->active)
+			it = deleteWave(wave);
+		if (it == waves.end())
+			break;
+	}
+	for (auto it = rocks.begin(); it != rocks.end(); ++it) {
+		auto rock = *it;
+		if (!rock->active)
+			it = deleteRock(rock);
+		if (it == rocks.end())
+			break;
 	}
 }

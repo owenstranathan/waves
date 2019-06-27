@@ -44,16 +44,20 @@ public:
 		std::function<bool(wabi::Rectf, wabi::Rectf)>,
 		std::function<float(wabi::Rectf)>, 
 		std::function<float(wabi::Rectf)>);
-	void addCollider(Collidable*);
-	void removeCollider(Collidable*);
+	void addCollidable(Collidable*);
+	void removeCollidable(Collidable*);
 	void clear();
 	size_t size() const;
-	inline const std::list<Collidable*> colliders() const {
+	inline const std::list<Collidable*> collidables() const {
 		return sortedByX;
 	}
-	
-	std::unordered_map<std::pair<int, int>, Collider, PairHash> pairs;
+	void addCollider(Collidable* c1, Collidable* c2, unsigned int axis);
+		
+	std::unordered_map<std::pair<int, int>, Collider, PairHash> colliders;
+	std::unordered_map<int, std::list<std::pair<int, int>>> key2Id;
 	std::list<std::pair<Collidable*, Collidable*>> activePairs;
+	std::list<std::pair<Collidable*, Collidable*>> previouslyActivePairs;
+	std::list<std::pair<Collidable*, Collidable*>> deactivePairs;
 	std::list<Collidable*> sortedByX;
 	std::list<Collidable*> sortedByY;
 	Game* game;
@@ -62,10 +66,42 @@ public:
 
 class CollisionVisitor {
 public:
-	virtual void visit(Collidable*, Collidable*);
-	virtual void visit(PhysicsBody*, Collidable*);
-	virtual void visit(Sea*, Collidable*);
-	virtual void visit(Wave*, Collidable*);
-	virtual void visit(Rock*, Collidable*);
-	virtual void visit(Ship*, Collidable*);
+	virtual void visit(Collidable*, Collidable*) {};
+	virtual void visit(PhysicsBody*, Collidable*) {};
+	virtual void visit(Sea*, Collidable*) {};
+	virtual void visit(Wave*, Collidable*) {};
+	virtual void visit(Rock*, Collidable*) {};
+	virtual void visit(Ship*, Collidable*) {};
 };
+
+class EnterVisitor : public CollisionVisitor{
+public:
+	virtual void visit(Collidable*, Collidable*) override;
+	virtual void visit(PhysicsBody*, Collidable*) override;
+	virtual void visit(Sea*, Collidable*) override;
+	virtual void visit(Wave*, Collidable*) override;
+	virtual void visit(Rock*, Collidable*) override;
+	virtual void visit(Ship*, Collidable*) override;
+};
+
+class ExitVisitor : public CollisionVisitor {
+public:
+	virtual void visit(Collidable*, Collidable*) override;
+	virtual void visit(PhysicsBody*, Collidable*) override;
+	virtual void visit(Sea*, Collidable*) override;
+	virtual void visit(Wave*, Collidable*) override;
+	virtual void visit(Rock*, Collidable*) override;
+	virtual void visit(Ship*, Collidable*) override;
+};
+
+class StayVisitor : public CollisionVisitor {
+public:
+	virtual void visit(Collidable*, Collidable*) override;
+	virtual void visit(PhysicsBody*, Collidable*) override;
+	virtual void visit(Sea*, Collidable*) override;
+	virtual void visit(Wave*, Collidable*) override;
+	virtual void visit(Rock*, Collidable*) override;
+	virtual void visit(Ship*, Collidable*) override;
+};
+
+

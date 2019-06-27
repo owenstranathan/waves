@@ -16,6 +16,7 @@ public:
 
 	void update();
 	void handleEvent(sf::Event&);
+	void cleanUp();
 
 	Wave * createWave(float position, float magnitude);
 	std::list<Wave*>::iterator deleteWave(std::list<Wave*>::iterator);
@@ -29,6 +30,7 @@ public:
 	Ship* ship;
 	std::list<Wave*> waves;
 	std::list<Rock*> rocks;
+	std::list<GameObject*> _delete_me;
 	CollisionSystem collisionSystem;
 	sf::Clock clock;
 	float deltaTime = 0.f;

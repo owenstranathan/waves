@@ -12,8 +12,9 @@ public:
 		game = g;
 		density = 1;
 	}
+	virtual ~Rock() {}
 
-	virtual void resolveCollision(Sea*) override;
+	virtual void collisionEnter(Sea*) override;
 	virtual void accept(Visitor&) override;
 	virtual void accept(CollisionVisitor&, Collidable*) override;
 	virtual wabi::Rectf rect() const override;

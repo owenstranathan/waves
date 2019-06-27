@@ -7,6 +7,7 @@
 
 class PhysicsBody : public Collidable {
 public:
+	virtual ~PhysicsBody() { }
 	virtual void update(const float);
 	virtual sf::Vector2f dragForce(const float);
 	virtual float mass() { return rect().area() * density;  }

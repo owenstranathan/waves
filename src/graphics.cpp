@@ -47,12 +47,6 @@ void Graphics::draw() const {
 	infostream << "# waves		: " << game->waves.size() << std::endl;
 	infostream << "# rocks		: " << game->rocks.size() << std::endl;
 	infostream << "# colliders	: " << game->collisionSystem.size() << std::endl;
-	std::stringstream colliderPairStream;
-	for (auto&& p : game->collisionSystem.pairs) {
-		Collider c = p.second;
-		colliderPairStream << "(" << c.pair.first->id << ", " << c.pair.second->id << ") ";
-	}
-	infostream << "pairs		: " << colliderPairStream.str() << std::endl;
 	infostream << "ship pos		: " << game->ship->position << std::endl;
 	infostream << "ship vel		: " << game->ship->velocity << std::endl;
 	infostream << "ship accl	: " << game->ship->acceleration << std::endl;
@@ -61,22 +55,30 @@ void Graphics::draw() const {
 	text->setPosition(3, 3);
 	target->draw(*text);
 
+	std::stringstream colliderPairStream;
+	for (auto&& p : game->collisionSystem.colliders) {
+		auto key = p.first;
+		colliderPairStream << "(" << key.first << ", " << key.second << ") \n";
+	}
+	infostream << "pairs: \n" << colliderPairStream.str() << std::endl;
+	text->setString(colliderPairStream.str());
+	auto textRect = text->getGlobalBounds();
+	text->setPosition(SCREEN_WIDTH - textRect.width, 3);
+	target->draw(*text);
+
+
 #if _DEBUG
 	draw(game->collisionSystem);
 #endif
 }
 
 void Graphics::draw(const CollisionSystem& collisionSystem) const {
-	for (auto&& collider : collisionSystem.colliders()) {
+	for (auto&& collider : collisionSystem.collidables()) {
 		draw(*collider, sf::Color::Green);
 	}
-	for (auto&& pair : collisionSystem.pairs) {		
-		Collider c = pair.second;
-		if (c.colliding())
-		{
-			draw(*c.pair.first, sf::Color::Red);
-			draw(*c.pair.second, sf::Color::Red);
-		}
+	for (auto&& pair : collisionSystem.activePairs) {		
+		draw(*pair.first, sf::Color::Red);	
+		draw(*pair.second, sf::Color::Red);
 	}
 }
 

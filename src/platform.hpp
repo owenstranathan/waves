@@ -7,8 +7,8 @@
 
 class Platform : public PhysicsBody {
 public:
-	Platform();
-	~Platform();
+	Platform() {}
+	virtual ~Platform() {}
 
 	float height;
 	float width;

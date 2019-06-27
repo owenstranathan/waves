@@ -13,7 +13,7 @@ void PhysicsBody::addForce(const sf::Vector2f& force) {
 void PhysicsBody::update(const float deltaTime) {
 	velocity += acceleration;
 	position += velocity;
-	acceleration *= 0.f;
+	acceleration *= 0.f;	
 }
 
 sf::Vector2f PhysicsBody::dragForce(const float fluidDensity = 1)
