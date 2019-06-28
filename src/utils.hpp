@@ -81,18 +81,21 @@ namespace wabi
 	}
 	
 	template <typename T>
-	sf::Vector2<T> randomVector2()
+	sf::Vector2<T> randomVector2(T maxX, T maxY)
 	{
-		return sf::Vector2<T>(randomNumber<T>(static_cast<T>(0), static_cast<T>(SCREEN_WIDTH)),
-			randomNumber<T>(static_cast<T>(0), static_cast<T>(SCREEN_HEIGHT)));
+	//	return sf::Vector2<T>(randomNumber<T>(static_cast<T>(0), static_cast<T>(SCREEN_WIDTH)),
+	//		randomNumber<T>(static_cast<T>(0), static_cast<T>(SCREEN_HEIGHT)));
+	  return sf::Vector2<T>(randomNumber<T>(static_cast<T>(0), static_cast<T>(maxX)),
+			randomNumber<T>(static_cast<T>(0), static_cast<T>(maxY)));
+
 	}
 	
-	template <typename T>
-	sf::Vector2<T> randomVector2(T start, T end)
-	{
-	    auto blah{std::bind(randomNumber<T>, start, end)};
-	    return sf::Vector2<T>(blah(), blah());
-	}	
+//	template <typename T>
+//	sf::Vector2<T> randomVector2(T start, T end)
+//	{
+//	    auto blah{std::bind(randomNumber<T>, start, end)};
+//	    return sf::Vector2<T>(blah(), blah());
+//	}	
 
 
 	template <typename T>

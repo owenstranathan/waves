@@ -3,6 +3,7 @@ project(waves)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
 find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
 
