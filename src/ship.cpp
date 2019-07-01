@@ -66,7 +66,8 @@ void Ship::collisionStay(Sea *sea)
 
 void Ship::collisionEnter(Wave *wave)
 {
-    auto waveHeight = wave->height(position.x) + game->sea->level;
+    // auto waveHeight = wave->height(position.x) + game->sea->level;
+    auto waveHeight = wave->totalHeight(position.x) + game->sea->level;
     if (rect().bottom() > waveHeight)
         return;
     auto waveRect = wabi::Rectf(0, waveHeight, game->worldWidth, waveHeight);

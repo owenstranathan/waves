@@ -38,6 +38,21 @@ float Wave::overlapingHeight(float x) const
     return h;
 }
 
+float Wave::totalHeight(float x) const
+{
+    return height(x) + overlapingHeight(x);
+}
+
+float Wave::maxHeight() const
+{
+    auto max = 0.f;
+    for (float i = left(); i < right(); i += 0.5)
+    {
+        max = std::max(max, totalHeight(i));
+    }
+    return max;
+}
+
 float Wave::slope(float x) const
 {
     // derivative of height
@@ -73,16 +88,6 @@ float Wave::left() const
 float Wave::right() const
 {
     return position.x + 2.5f * (1 / width);
-}
-
-float Wave::maxHeight() const
-{
-    auto max = 0.f;
-    for (float i = left(); i < right(); i += 0.5)
-    {
-        max = std::max(max, height(i) + overlapingHeight(i));
-    }
-    return max;
 }
 
 wabi::Rectf Wave::rect() const

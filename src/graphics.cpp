@@ -57,6 +57,10 @@ void Graphics::draw() const
     text->setPosition(3, 3);
     target->draw(*text);
 
+    for (auto &&w : game->waves)
+    {
+        draw(*w);
+    }
     std::stringstream colliderPairStream;
     for (auto &&p : game->collisionSystem.colliders)
     {
@@ -99,6 +103,18 @@ void Graphics::draw(const Sea &sea) const
     }
     target->draw(&vertices[0], vertices.size(), sf::TriangleStrip);
     vertices.clear();
+}
+
+void Graphics::draw(const Wave &wave) const
+{
+    std::vector<sf::Vertex> vertices;
+    float step = 4 / pixelsPerUnit;
+    for (float i = 0; i < wave.right(); i += step)
+    {
+        vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, wave.totalHeight(i) + game->sea->level)), sf::Color::Red));
+        vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, 0)), sf::Color::Red));
+    }
+    target->draw(&vertices[0], vertices.size(), sf::Lines);
 }
 
 void Graphics::draw(const Rock &rock) const

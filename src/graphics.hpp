@@ -14,6 +14,7 @@ public:
 	void draw() const;
 	void draw(const CollisionSystem&) const;
 	void draw(const Sea&) const;
+	void draw(const Wave&) const;
 	void draw(const Rock&) const;
 	void draw(const Ship&) const;
 	void draw(const Collidable&, sf::Color) const;
