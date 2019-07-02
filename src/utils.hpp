@@ -128,3 +128,11 @@ T operator*(sf::Vector2<T> v1, sf::Vector2<T> v2) {
 	return wabi::dot(v1, v2);
 }
 
+
+template <typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const std::pair<T, U>& p)
+{
+	os << "(" << p.first << ", " << p.second << ")";
+	return os;
+}
+

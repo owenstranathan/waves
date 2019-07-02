@@ -1,6 +1,7 @@
 # pragma once
 
 #include <unordered_map>
+#include <set>
 
 #include "utils.hpp"
 #include "prelude.hpp"
@@ -10,9 +11,15 @@
 const unsigned int X_AXIS = 1 << 0; // 1 (0001)
 const unsigned int Y_AXIS = 1 << 1; // 2 (0010)
 
-template <typename T, typename U>
-std::pair<T, U> make_unordered_pair(T t, U u) {
-	return std::make_pair(std::min(t, u), std::max(t, u));
+template <typename T, typename U, typename Predicate>
+std::pair<T, U> make_unordered_pair(T t, U u, Predicate unaryPred) {
+	if (unaryPred(t) < unaryPred(u)) {
+		return std::make_pair(t, u);
+	}
+	else {
+		return std::make_pair(u, t);
+	}
+	// return std::make_pair(std::min(unaryPred(t), unaryPred(u)), std::max(unaryPred(t), unaryPred(u)));
 }
 
 struct PairHash {
@@ -38,28 +45,28 @@ class CollisionSystem {
 public:
 	CollisionSystem(Game*);
 
+	void addCollidable(Collidable*);
+	void removeCollidable(Collidable*);
 	void resolveCollisions();
-	void SweepAxis(unsigned int, 
+	void sweepAxis(unsigned int, 
 		std::list<Collidable*>&,
 		std::function<bool(wabi::Rectf, wabi::Rectf)>,
 		std::function<float(wabi::Rectf)>, 
 		std::function<float(wabi::Rectf)>);
-	void addCollidable(Collidable*);
-	void removeCollidable(Collidable*);
-	void clear();
+	void activateColliderForAxis(Collidable* c1, Collidable* c2, unsigned int axis);
+		void clear();
 	size_t size() const;
 	inline const std::list<Collidable*> collidables() const {
 		return sortedByX;
 	}
-	void addCollider(Collidable* c1, Collidable* c2, unsigned int axis);
 		
 	std::unordered_map<std::pair<int, int>, Collider, PairHash> colliders;
 	std::unordered_map<int, std::list<std::pair<int, int>>> key2Id;
 	std::list<std::pair<Collidable*, Collidable*>> activePairs;
 	std::list<std::pair<Collidable*, Collidable*>> previouslyActivePairs;
-	std::list<std::pair<Collidable*, Collidable*>> deactivePairs;
 	std::list<Collidable*> sortedByX;
 	std::list<Collidable*> sortedByY;
+	std::set<std::pair<int, int>> seenKeys;
 	Game* game;
 };
 

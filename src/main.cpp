@@ -31,7 +31,7 @@ int main()
     // sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Waves!", sf::Style::None, settings);
     sf::RenderWindow window(videoMode, "Waves!", sf::Style::Default, settings);
     window.setFramerateLimit(100);
-    window.setVerticalSyncEnabled(true);
+    // window.setVerticalSyncEnabled(true);
 
     Game game(SEA_LEVEL);
     Graphics graphics(&game, &window, videoMode);

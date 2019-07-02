@@ -60,8 +60,7 @@ std::list<Wave*>::iterator Game::deleteWave(std::list<Wave*>::iterator it) {
 	auto wave = *it;
 	collisionSystem.removeCollidable(wave);
 	it = waves.erase(it);
-	_delete_me.push_back(wave);
-	// delete wave;
+	delete wave;
 	return it;
 }
 
@@ -82,8 +81,7 @@ std::list<Rock*>::iterator Game::deleteRock(std::list<Rock*>::iterator it) {
 	auto rock = *it;
 	collisionSystem.removeCollidable(rock);
 	it = rocks.erase(it);
-	_delete_me.push_back(rock);
-	// delete rock;
+	delete rock;
 	return it;
 }
 

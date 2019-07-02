@@ -13,7 +13,9 @@ public:
 	virtual ~Sea();
 
 	virtual void collisionEnter(Ship* c) override;
+	virtual void collisionStay(Ship* c) override;
 	virtual void collisionEnter(Rock* c) override;
+	virtual void collisionStay(Rock* c) override;
 
 
 	virtual void accept(Visitor&)override;

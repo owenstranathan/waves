@@ -92,20 +92,26 @@ float Wave::right() const
 
 wabi::Rectf Wave::rect() const
 {
+	float h = maxHeight();
     // float h = height(position.x);
-    float h = maxHeight();
+	// float h = totalHeight(position.x);
     float top = position.y + h;
     return wabi::Rectf(left(), top, right() - left(), h);
 }
 
 void Wave::collisionEnter(Wave *wave)
 {
+	if ((wave->position.x < position.x && wave->right() < position.x) || (wave->position.x > position.x && right() < wave->position.x)) {
+		return;
+	}
     overlapingWaves.push_back(wave);
+	wave->overlapingWaves.push_back(this); 
 }
 
 void Wave::collisionExit(Wave *wave)
 {
     overlapingWaves.remove(wave);
+    wave->overlapingWaves.remove(this);
 }
 
 void Wave::collisionEnter(Ship *ship)

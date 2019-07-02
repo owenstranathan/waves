@@ -29,3 +29,6 @@ void Rock::collisionEnter(Sea* sea) {
 	}
 }
 
+void Rock::collisionStay(Sea* sea) {
+	collisionEnter(sea);
+}

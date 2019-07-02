@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "utils.hpp"
 #include "graphics.hpp"
 #include "game.hpp"
 #include "sea.hpp"
@@ -43,6 +44,14 @@ void Graphics::draw() const
     }
     draw(*game->ship);
 
+#if _DEBUG
+    draw(game->collisionSystem);
+	drawDebugText();
+#endif
+}
+
+void Graphics::drawDebugText() const
+{
     std::stringstream infostream;
     infostream << "FrameRate    : " << 1 / game->deltaTime << std::endl;
     infostream << "deltaTime    : " << game->deltaTime << std::endl;
@@ -52,6 +61,25 @@ void Graphics::draw() const
     infostream << "ship pos		: " << game->ship->position << std::endl;
     infostream << "ship vel		: " << game->ship->velocity << std::endl;
     infostream << "ship accl	: " << game->ship->acceleration << std::endl;
+	infostream << "colliders	: ";
+	for (auto&& c : game->collisionSystem.collidables()) {
+		infostream << c->id << " ";
+	}
+	infostream << std::endl;
+	infostream << "seen			: "; 
+	for (auto&& i : game->collisionSystem.seenKeys) {
+		infostream << i << " ";
+	}
+	infostream << std::endl;
+
+	// for (auto&& c : game->collisionSystem.collidables()) {
+	// 	std::list<std::pair<int, int>> listOfKeys = game->collisionSystem.key2Id[c->id];
+	// 	infostream << c->id << ":{ ";
+	// 	for (auto k : listOfKeys) {
+	// 		infostream << "(" << k.first << ", " << k.second << ") ";
+	// 	}
+	// 	infostream<< "}\n";
+	// }
 
     text->setString(infostream.str());
     text->setPosition(3, 3);
@@ -68,15 +96,13 @@ void Graphics::draw() const
         colliderPairStream << "(" << key.first << ", " << key.second << ") \n";
     }
     infostream << "pairs: \n"
-               << colliderPairStream.str() << std::endl;
+               << colliderPairStream.str() << std::endl;	
     text->setString(colliderPairStream.str());
     auto textRect = text->getGlobalBounds();
     text->setPosition(SCREEN_WIDTH - textRect.width, 3);
     target->draw(*text);
 
-#if _DEBUG
-    draw(game->collisionSystem);
-#endif
+	
 }
 
 void Graphics::draw(const CollisionSystem &collisionSystem) const
@@ -107,14 +133,15 @@ void Graphics::draw(const Sea &sea) const
 
 void Graphics::draw(const Wave &wave) const
 {
-    std::vector<sf::Vertex> vertices;
-    float step = 4 / pixelsPerUnit;
-    for (float i = 0; i < wave.right(); i += step)
-    {
-        vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, wave.totalHeight(i) + game->sea->level)), sf::Color::Red));
-        vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, 0)), sf::Color::Red));
-    }
-    target->draw(&vertices[0], vertices.size(), sf::Lines);
+    // std::vector<sf::Vertex> vertices;
+    // float step = 4 / pixelsPerUnit;
+    // for (float i = 0; i < wave.right(); i += step)
+    // {
+		/// this total height double counts waves if you add it with totalheight from all other waves.
+    //     vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, wave.totalHeight(i) + game->sea->level)), sf::Color::Red));
+    //     vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, 0)), sf::Color::Red));
+    // }
+    // target->draw(&vertices[0], vertices.size(), sf::Lines);
 }
 
 void Graphics::draw(const Rock &rock) const
@@ -170,3 +197,4 @@ void Graphics::draw(const sf::Rect<T> &rect, sf::Color color) const
     rectShape.setPosition(sf::Vector2f(rect.left, rect.top));
     target->draw(rectShape);
 }
+

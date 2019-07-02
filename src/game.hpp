@@ -30,7 +30,6 @@ public:
 	Ship* ship;
 	std::list<Wave*> waves;
 	std::list<Rock*> rocks;
-	std::list<GameObject*> _delete_me;
 	CollisionSystem collisionSystem;
 	sf::Clock clock;
 	float deltaTime = 0.f;

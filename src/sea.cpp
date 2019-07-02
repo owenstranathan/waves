@@ -50,6 +50,7 @@ wabi::Rectf Sea::rect() const
     // return wabi::Rectf(0.f, level, game->worldWidth, FLT_MAX/2); // I guess FLT_MAX isn't
     // defined on all platforms
     return wabi::Rectf(0.f, level, game->worldWidth, std::numeric_limits<float>::max() / 2);
+    // return wabi::Rectf(0.f, max, game->worldWidth, std::numeric_limits<float>::max() / 2);
 }
 
 void Sea::collisionEnter(Rock *rock)
@@ -57,7 +58,17 @@ void Sea::collisionEnter(Rock *rock)
     rock->collisionEnter(this);
 }
 
+void Sea::collisionStay(Rock *rock)
+{
+    rock->collisionStay(this);
+}
+
 void Sea::collisionEnter(Ship *ship)
 {
     ship->collisionEnter(this);
+}
+
+void Sea::collisionStay(Ship *ship)
+{
+    ship->collisionStay(this);
 }

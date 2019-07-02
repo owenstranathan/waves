@@ -51,7 +51,7 @@ wabi::Rectf Ship::rect() const
 }
 
 void Ship::collisionEnter(Sea *sea)
-{
+{	
     wabi::Rectf overlap;
     rect().intersects(sea->rect(), overlap);
     auto g = Gravity::constant;
@@ -67,7 +67,8 @@ void Ship::collisionStay(Sea *sea)
 void Ship::collisionEnter(Wave *wave)
 {
     // auto waveHeight = wave->height(position.x) + game->sea->level;
-    auto waveHeight = wave->totalHeight(position.x) + game->sea->level;
+	auto waveHeight = game->sea->height(position.x);
+    // auto waveHeight = wave->totalHeight(position.x) + game->sea->level;
     if (rect().bottom() > waveHeight)
         return;
     auto waveRect = wabi::Rectf(0, waveHeight, game->worldWidth, waveHeight);

@@ -12,6 +12,7 @@ public:
 	~Graphics();
 
 	void draw() const;
+	void drawDebugText() const;
 	void draw(const CollisionSystem&) const;
 	void draw(const Sea&) const;
 	void draw(const Wave&) const;

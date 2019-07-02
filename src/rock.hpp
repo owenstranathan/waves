@@ -15,6 +15,7 @@ public:
 	virtual ~Rock() {}
 
 	virtual void collisionEnter(Sea*) override;
+	virtual void collisionStay(Sea*) override;
 	virtual void accept(Visitor&) override;
 	virtual void accept(CollisionVisitor&, Collidable*) override;
 	virtual wabi::Rectf rect() const override;

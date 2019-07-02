@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cassert>
 
 #include "collisionsystem.hpp"
@@ -25,7 +26,11 @@ void CollisionSystem::removeCollidable(Collidable* collidable) {
 	sortedByY.remove(collidable);
 	for (auto key : key2Id[collidable->id]) {
 		// remove the key from the colliders (because the pair is not invalid)
+		activePairs.remove(colliders[key].pair);
+		previouslyActivePairs.remove(colliders[key].pair);
 		colliders.erase(key);
+		std::cout << "Removing collider " << key << std::endl;
+		// colliders.remove(key);
 		// get the id for the other collider in this key pair;
 		unsigned int otherId = (key.first == collidable->id) ? key.second : key.first;
 		key2Id[otherId].remove(key);
@@ -34,7 +39,7 @@ void CollisionSystem::removeCollidable(Collidable* collidable) {
 	// activePairs.clear();
 }
 
-void CollisionSystem::SweepAxis(
+void CollisionSystem::sweepAxis(
 	unsigned int axis,
 	std::list<Collidable*>& collidables,
 	std::function<bool(wabi::Rectf, wabi::Rectf)> compare,
@@ -53,22 +58,12 @@ void CollisionSystem::SweepAxis(
 			a = std::prev(a);
 			auto active = *a;
 			auto activeRect = active->rect();
-			// if (activeRect.intersects(colliderRect)) {
-			auto key = make_unordered_pair(collidable->id, active->id);
+			auto key = make_unordered_pair(collidable->id, active->id, [](int x) -> int {return x; });
 			if (compare(colliderRect, activeRect)){
-				// auto key = make_unordered_pair(collidable->id, active->id);
-				// colliders[key].pair = std::make_pair(collidable, active);
-				// colliders[key].mask |= axis;
-				// if (colliders[key].colliding()) {
-				// 	activePairs.push_back(colliders[key].pair);
-				// }
-				addCollider(collidable, active, axis);
+				activateColliderForAxis(collidable, active, axis);
 			}
 			else {
 				colliders[key].mask &= ~axis;
-				// if (!colliders[key].colliding()) {
-				// 	deactivePairs.push_back(colliders[key].pair);
-				// }
 			}
 			if (little(colliderRect) > max) {
 				break;
@@ -87,13 +82,13 @@ void CollisionSystem::resolveCollisions() {
 	previouslyActivePairs.clear();
 	previouslyActivePairs.swap(activePairs);
 	activePairs.clear();
-	SweepAxis(
+	sweepAxis(
 		X_AXIS,
 		sortedByX,
 		[](wabi::Rectf r1, wabi::Rectf r2) -> bool { return r1.left < r2.right(); },
 		[](wabi::Rectf r) -> float { return r.left; },
 		[](wabi::Rectf r) -> float { return r.right(); });
-	SweepAxis(
+	sweepAxis(
 		Y_AXIS,
 		sortedByY,
 		[](wabi::Rectf r1, wabi::Rectf r2) -> bool { return r1.bottom() < r2.top; },
@@ -136,33 +131,27 @@ size_t CollisionSystem::size() const {
 	return sortedByX.size();
 }
 
-void CollisionSystem::addCollider(Collidable* c1, Collidable* c2, unsigned int axis) {
-	auto key = make_unordered_pair(c1->id, c2->id);
-	colliders[key].pair = std::make_pair(c1, c2);
+void CollisionSystem::activateColliderForAxis(Collidable* c1, Collidable* c2, unsigned int axis) {
+	auto key = make_unordered_pair(c1->id, c2->id, [](int x)->int { return x; });
+	colliders[key].pair = make_unordered_pair(c1, c2, [](Collidable * c) -> int {return c->id; });
 	colliders[key].mask |= axis;
+	seenKeys.insert(key);
 	if (colliders[key].colliding()) {
-		activePairs.push_back(colliders[key].pair);
-	}
-	// All this loop search bullshit is cause std::find wasn't compiling and I'm in a hurry
-	typedef std::list<std::pair<int, int>>::iterator fuckyou;
-	auto find = []( fuckyou begin, fuckyou end, std::pair<int, int> key) -> bool {
-	
-		for (auto iter = begin; iter != end; std::advance(iter, 1)){
-			if (*iter == key) {
-				return true;
-			}
+		// don't add the same pair twice;
+		auto search = std::find(activePairs.begin(), activePairs.end(), colliders[key].pair);
+		if (search == activePairs.end()) {
+			activePairs.push_back(colliders[key].pair);
 		}
-		return false;
-	};
+	}
 	std::list<std::pair<int, int>> c1IdList = key2Id[c1->id];
 	std::list<std::pair<int, int>>  c2IdList = key2Id[c2->id];
-
-	if (!find(c1IdList.begin(), c1IdList.end(), key)) {
+	if (auto search = std::find(c1IdList.begin(), c1IdList.end(), key) == c1IdList.end()) {
 		key2Id[c1->id].push_back(key);
 	}
-	if (!find(c2IdList.begin(), c2IdList.end(), key)) {
+	if (auto search = std::find(c2IdList.begin(), c2IdList.end(), key) == c2IdList.end()) {
 		key2Id[c2->id].push_back(key);
 	}
+
 }
 
 // CollisionEnter
