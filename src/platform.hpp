@@ -4,12 +4,13 @@
 #include "prelude.hpp"
 #include "physicsbody.hpp"
 
-
-class Platform : public PhysicsBody {
+class Platform : public PhysicsBody
+{
 public:
-	Platform() {}
-	virtual ~Platform() {}
+    // Platform() {}
+    Platform(float h, float w) : height(h), width(w) {}
+    virtual ~Platform() {}
 
-	float height;
-	float width;
+    float height;
+    float width;
 };

@@ -14,7 +14,8 @@ public:
 	void addForce(const sf::Vector2f&);
 
 	bool useGravity = true;
-	float density = 1;
+    bool isKinematic = false;
+    float density = 1;
 	sf::Vector2f position;
 	sf::Vector2f velocity;
 	sf::Vector2f acceleration;

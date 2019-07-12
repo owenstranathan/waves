@@ -17,7 +17,7 @@
       "externalConsole": false,
       "MIMode": "lldb",
       // "preLaunchTask": "clang++ build active file"
-      "preLaunchTask": "make"
+      "preLaunchTask": "make debug"
     },
     {
       "name": "Launch",

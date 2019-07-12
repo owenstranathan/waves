@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <set>
 
 #include "utils.hpp"
 #include "graphics.hpp"
@@ -46,40 +47,51 @@ void Graphics::draw() const
 
 #if _DEBUG
     draw(game->collisionSystem);
-	drawDebugText();
+    drawDebugText();
 #endif
 }
 
 void Graphics::drawDebugText() const
 {
+    static std::set<int> rockIds;
     std::stringstream infostream;
     infostream << "FrameRate    : " << 1 / game->deltaTime << std::endl;
     infostream << "deltaTime    : " << game->deltaTime << std::endl;
-    infostream << "# waves		: " << game->waves.size() << std::endl;
-    infostream << "# rocks		: " << game->rocks.size() << std::endl;
-    infostream << "# colliders	: " << game->collisionSystem.size() << std::endl;
-    infostream << "ship pos		: " << game->ship->position << std::endl;
-    infostream << "ship vel		: " << game->ship->velocity << std::endl;
-    infostream << "ship accl	: " << game->ship->acceleration << std::endl;
-	infostream << "colliders	: ";
-	for (auto&& c : game->collisionSystem.collidables()) {
-		infostream << c->id << " ";
-	}
-	infostream << std::endl;
-	infostream << "seen			: "; 
-	for (auto&& i : game->collisionSystem.seenKeys) {
-		infostream << i << " ";
-	}
-	infostream << std::endl;
+    infostream << "# waves    : " << game->waves.size() << std::endl;
+    infostream << "# rocks    : " << game->rocks.size() << std::endl;
+    infostream << "# colliders  : " << game->collisionSystem.size() << std::endl;
+    infostream << "ship pos   : " << game->ship->position << std::endl;
+    infostream << "ship vel   : " << game->ship->velocity << std::endl;
+    infostream << "ship accl  : " << game->ship->acceleration << std::endl;
+    infostream << "colliders  : ";
+    for (auto &&c : game->collisionSystem.collidables())
+    {
+        infostream << c->id << " ";
+    }
+    infostream << std::endl;
+    for (auto &&rock : game->rocks)
+    {
+        rockIds.insert(rock->id);
+    }
 
-	// for (auto&& c : game->collisionSystem.collidables()) {
-	// 	std::list<std::pair<int, int>> listOfKeys = game->collisionSystem.key2Id[c->id];
-	// 	infostream << c->id << ":{ ";
-	// 	for (auto k : listOfKeys) {
-	// 		infostream << "(" << k.first << ", " << k.second << ") ";
-	// 	}
-	// 	infostream<< "}\n";
-	// }
+    infostream << "rockIds : ";
+    for (auto &&id : rockIds)
+    {
+        infostream << id << " ";
+    }
+
+    infostream << std::endl;
+
+    for (auto &&c : game->collisionSystem.collidables())
+    {
+        std::list<std::pair<int, int>> listOfKeys = game->collisionSystem.key2Id[c->id];
+        infostream << c->id << ":{ ";
+        for (auto k : listOfKeys)
+        {
+            infostream << "(" << k.first << ", " << k.second << ") ";
+        }
+        infostream << "}\n";
+    }
 
     text->setString(infostream.str());
     text->setPosition(3, 3);
@@ -96,13 +108,11 @@ void Graphics::drawDebugText() const
         colliderPairStream << "(" << key.first << ", " << key.second << ") \n";
     }
     infostream << "pairs: \n"
-               << colliderPairStream.str() << std::endl;	
+               << colliderPairStream.str() << std::endl;
     text->setString(colliderPairStream.str());
     auto textRect = text->getGlobalBounds();
     text->setPosition(SCREEN_WIDTH - textRect.width, 3);
     target->draw(*text);
-
-	
 }
 
 void Graphics::draw(const CollisionSystem &collisionSystem) const
@@ -137,7 +147,7 @@ void Graphics::draw(const Wave &wave) const
     // float step = 4 / pixelsPerUnit;
     // for (float i = 0; i < wave.right(); i += step)
     // {
-		/// this total height double counts waves if you add it with totalheight from all other waves.
+    /// this total height double counts waves if you add it with totalheight from all other waves.
     //     vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, wave.totalHeight(i) + game->sea->level)), sf::Color::Red));
     //     vertices.push_back(sf::Vertex(game2ScreenPos(sf::Vector2f(i, 0)), sf::Color::Red));
     // }
@@ -197,4 +207,3 @@ void Graphics::draw(const sf::Rect<T> &rect, sf::Color color) const
     rectShape.setPosition(sf::Vector2f(rect.left, rect.top));
     target->draw(rectShape);
 }
-
