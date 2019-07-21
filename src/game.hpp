@@ -39,6 +39,6 @@ public:
 	bool won = false;
 	static const float worldWidth;
 	static const float worldHeight;
-	const float fixedStep = 0.002555f;
+	const float fixedStep = 0.001555f;
 	float timeSinceLastUpdate = 0.0f;
 };

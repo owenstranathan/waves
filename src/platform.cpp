@@ -30,24 +30,27 @@ void Platform::collisionEnter(Ship *ship)
 	}
 	wabi::Rectf overlap;
 	myRect.intersects(shipRect, overlap);
-	if (shipRect.bottom() - myRect.top > -0.5f && shipRect.top > myRect.top)
-	{
-		// then we're falling onto the platform
-		ship->velocity.y = 0.f;
-		ship->position.y += overlap.height;
-		ship->addForce(ship->dragForce(1));
-	}
-	else
-	{
-		auto restitutionForce = mass() * ship->velocity * -overlap.area();
+	// if (shipRect.bottom() - myRect.top > -0.5f && shipRect.top > myRect.top)
+	// {
+	// 	// then we're falling onto the platform
+	// 	ship->velocity.y = 0.f;
+	// 	ship->position.y += overlap.height;
+	// 	ship->addForce(ship->dragForce(1));
+	// }
+	// else
+	// {
+	// TODO: find the collision normal and the depth of penetration and apply force to that direction (work out proper physics for this)
+	// Probably gonna need some help from Ian
+	auto depthOfPenetration = (float)std::sqrt(std::pow(overlap.right() - overlap.left, 2) + std::pow(overlap.top - overlap.bottom(), 2));
+		// auto restitutionForce = mass() * ship->velocity * - overlap.area();
+		auto restitutionForce = mass() * ship->velocity * -depthOfPenetration;
 		// magic ! (you're a wizard harry)
-		float maxMag = 200.f;
+		 float maxMag = 200.f;
 		if (wabi::squareMagnitude(restitutionForce) > maxMag * maxMag){
 			restitutionForce = wabi::normalized(restitutionForce) * maxMag;
 		}
 		ship->addForce(restitutionForce);
-		// ship->addForce(ship->dragForce(1));
-	}
+	// }
 }
 
 void Platform::collisionStay(Ship *ship) { collisionEnter(ship); }
