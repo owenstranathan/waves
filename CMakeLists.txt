@@ -15,6 +15,7 @@ if(NOT SFML)
 #   message(FATAL_ERROR "sfml library not found")
 endif()
 
+
 add_subdirectory(src)
 target_compile_definitions(wavesSources PRIVATE SFML_STATIC)
 include_directories(${SFML_INCLUDE_DIR})

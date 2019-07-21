@@ -16,8 +16,8 @@
     },
     {
       "type": "shell",
-      "label": "make",
-      "command": "make",
+      "label": "make debug",
+      "command": "make debug",
       "options": {
         "cwd": "${workspaceFolder}"
       },

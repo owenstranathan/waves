@@ -12,6 +12,7 @@ namespace wabi {
 		explicit Rect(const Rect<U>& rectangle);
 		T right() const;
 		T bottom() const;
+		sf::Vector2<T> center() const;
 		bool intersects(const Rect<T>&) const;
 		bool intersects(const Rect<T>&, Rect<T>&) const;
 		T area() const;
@@ -47,6 +48,11 @@ namespace wabi {
 	template <typename T>
 	T Rect<T>::bottom() const {
 		return top - height;
+	}
+
+	template <typename T>
+	sf::Vector2<T> Rect<T>::center() const {
+		return sf::Vector2<T>(left + width / 2.f, top - height / 2.f);
 	}
 
 	template <typename T>

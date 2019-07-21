@@ -3,5 +3,5 @@
 
 int GameObject::_seed_id = 0;
 
-GameObject::GameObject(): game(nullptr), id(++_seed_id) { }
+GameObject::GameObject(): id(++_seed_id), game(nullptr) { }
 

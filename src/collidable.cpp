@@ -1,40 +1,30 @@
 #include "collidable.hpp"
 #include "visitor.hpp"
 
-void Collidable::accept(Visitor& v) { return v.visit(this); }
+void Collidable::accept(Visitor &v) { return v.visit(this); }
 
-void Collidable::accept(CollisionVisitor& v, Collidable* c) { return v.visit(this, c); }
+void Collidable::accept(CollisionVisitor &v, Collidable *c) { return v.visit(this, c); }
 
 // collisionEnter
-void Collidable::collisionEnter(Collidable* c) { }
-
-void Collidable::collisionEnter(Sea* c) { }
-
-void Collidable::collisionEnter(Ship* c) { }
-
-void Collidable::collisionEnter(Rock* c) { }
-
-void Collidable::collisionEnter(Wave* c) { }
+void Collidable::collisionEnter(Collidable *) {}
+void Collidable::collisionEnter(Sea *) {}
+void Collidable::collisionEnter(Ship *) {}
+void Collidable::collisionEnter(Rock *) {}
+void Collidable::collisionEnter(Wave *) {}
+void Collidable::collisionEnter(Platform *) {}
 
 // collisionStay
-void Collidable::collisionStay(Collidable* c) { }
-
-void Collidable::collisionStay(Sea* c) { }
-
-void Collidable::collisionStay(Ship* c) { }
-
-void Collidable::collisionStay(Rock* c) { }
-
-void Collidable::collisionStay(Wave* c) { }
+void Collidable::collisionStay(Collidable *) {}
+void Collidable::collisionStay(Sea *) {}
+void Collidable::collisionStay(Ship *) {}
+void Collidable::collisionStay(Rock *) {}
+void Collidable::collisionStay(Wave *) {}
+void Collidable::collisionStay(Platform *) {}
 
 // collisionExit
-void Collidable::collisionExit(Collidable* c) { }
-
-void Collidable::collisionExit(Sea* c) { }
-
-void Collidable::collisionExit(Ship* c) { }
-
-void Collidable::collisionExit(Rock* c) { }
-
-void Collidable::collisionExit(Wave* c) { }
-
+void Collidable::collisionExit(Collidable *) {}
+void Collidable::collisionExit(Sea *) {}
+void Collidable::collisionExit(Ship *) {}
+void Collidable::collisionExit(Rock *) {}
+void Collidable::collisionExit(Wave *) {}
+void Collidable::collisionExit(Platform *) {}

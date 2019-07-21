@@ -11,10 +11,17 @@ release:
 	make dobuild
 
 dobuild:
-	cd build && make
+	cd build && make --jobs=4
 	cp build/waves ./
 
 cmake: CMakeLists.txt src/CMakeLists.txt
 	mkdir -p build && cd build && cmake $(CMAKE_ARGS) ..
+
+run:
+	./waves
+
+both:
+	make debug
+	make run
 
 .PHONY: cmake all

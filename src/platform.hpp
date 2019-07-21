@@ -7,10 +7,16 @@
 class Platform : public PhysicsBody
 {
 public:
-    // Platform() {}
-    Platform(float h, float w) : height(h), width(w) {}
-    virtual ~Platform() {}
+	// Platform() {}
+	Platform(sf::Vector2f, float, float);
+	virtual ~Platform();
+	virtual wabi::Rectf rect() const override;
+	virtual void accept(Visitor &) override;
+	virtual void accept(CollisionVisitor &, Collidable *) override;
+	virtual void collisionEnter(Ship *) override;
+	virtual void collisionStay(Ship *) override;
+	virtual void collisionExit(Ship *) override;
 
-    float height;
-    float width;
+	float width;
+	float height;
 };

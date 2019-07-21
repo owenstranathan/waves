@@ -18,6 +18,7 @@ public:
 	void draw(const Wave &) const;
 	void draw(const Rock &) const;
 	void draw(const Ship &) const;
+	void draw(const Platform &) const;
 	void draw(const Collidable &, sf::Color) const;
 
 	template <typename T>
@@ -38,6 +39,7 @@ public:
 	static float pixelsPerUnit;
 	static int SCREEN_HEIGHT;
 	static int SCREEN_WIDTH;
+	static int preferredThickness;
 	sf::Font *const font;
 	sf::Text *const text;
 	Game *const game;
