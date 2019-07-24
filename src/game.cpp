@@ -24,6 +24,8 @@ Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), ship(new Ship(this, s
 	collisionSystem.addCollidable(ship);
 }
 
+Game::Game(Sea*, Ship*, std::list<Platform*>) : sea(nullptr), ship(nullptr), collisionSystem(this) {}
+
 Game::~Game()
 {
 	collisionSystem.removeCollidable(sea);

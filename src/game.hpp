@@ -12,6 +12,7 @@ class Game {
 public:
 
 	Game(float);
+	Game(Sea*, Ship*, std::list<Platform*>);
 	~Game();
 
 	void update();
