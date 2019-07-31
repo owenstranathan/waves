@@ -16,6 +16,9 @@ public:
 	virtual void collisionEnter(Ship *) override;
 	virtual void collisionStay(Ship *) override;
 	virtual void collisionExit(Ship *) override;
+	virtual void collisionEnter(Rock *) override;
+	virtual void collisionStay(Rock *) override;
+	virtual void collisionExit(Rock *) override;
 
 	float width;
 	float height;

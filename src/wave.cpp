@@ -12,8 +12,8 @@
 
 Wave::Wave(Game *g, float x, float a) : startX(x), amplitude(a)
 {
-    game = g;
-    position = sf::Vector2f(x, game->sea->level);
+	game = g;
+	position = sf::Vector2f(x, game->sea->level);
 }
 
 Wave::~Wave() {}
@@ -24,79 +24,79 @@ void Wave::accept(CollisionVisitor &v, Collidable *c) { v.visit(this, c); }
 
 float Wave::height(float x) const
 {
-    // cool guassian
-    return amplitude * decay * std::pow(M_E, -std::pow(width * (x - position.x), 2));
+	// cool guassian
+	return amplitude * decay * std::pow(M_E, -std::pow(width * (x - position.x), 2));
 }
 
 float Wave::overlapingHeight(float x) const
 {
-    auto h = 0;
-    for (auto &&w : overlapingWaves)
-    {
-        h += w->height(x);
-    }
-    return h;
+	auto h = 0;
+	for (auto &&w : overlapingWaves)
+	{
+	h += w->height(x);
+	}
+	return h;
 }
 
 float Wave::totalHeight(float x) const
 {
-    return height(x) + overlapingHeight(x);
+	return height(x) + overlapingHeight(x);
 }
 
 float Wave::maxHeight() const
 {
-    auto max = 0.f;
-    for (float i = left(); i < right(); i += 0.5)
-    {
-        max = std::max(max, totalHeight(i));
-    }
-    return max;
+	auto max = 0.f;
+	for (float i = left(); i < right(); i += 0.5)
+	{
+	max = std::max(max, totalHeight(i));
+	}
+	return max;
 }
 
 float Wave::slope(float x) const
 {
-    // derivative of height
-    return height(x) * (-2 * width * (x - position.x) * width);
+	// derivative of height
+	return height(x) * (-2 * width * (x - position.x) * width);
 }
 
 void Wave::update(const float deltaTime)
 {
-    // time += deltaTime * 100;
-    time += deltaTime * 10;
-    addForce(sf::Vector2f(time, 0));
-    addForce(dragForce(0.1225f));
-    if (decay >= 1.f)
-    {
-        sign = -0.25f;
-    }
-    else if (decay <= 0.f && sign <= 0)
-    {
-        sign = 0;
-        decay = 0;
-        active = false;
-    }
-    decay = decay + sign * deltaTime;
-    // width = width + sign * deltaTime;
-    PhysicsBody::update(deltaTime);
+	// time += deltaTime * 100;
+	time += deltaTime * 10;
+	addForce(sf::Vector2f(time, 0));
+	addForce(dragForce(0.1225f));
+	if (decay >= 1.f)
+	{
+	sign = -0.25f;
+	}
+	else if (decay <= 0.f && sign <= 0)
+	{
+	sign = 0;
+	decay = 0;
+	active = false;
+	}
+	decay = decay + sign * deltaTime;
+	// width = width + sign * deltaTime;
+	PhysicsBody::update(deltaTime);
 }
 
 float Wave::left() const
 {
-    return position.x - 2.5f * (1 / width);
+	return position.x - 2.5f * (1 / width);
 }
 
 float Wave::right() const
 {
-    return position.x + 2.5f * (1 / width);
+	return position.x + 2.5f * (1 / width);
 }
 
 wabi::Rectf Wave::rect() const
 {
 	float h = maxHeight();
-    // float h = height(position.x);
+	// float h = height(position.x);
 	// float h = totalHeight(position.x);
-    float top = position.y + h;
-    return wabi::Rectf(left(), top, right() - left(), h);
+	float top = position.y + h;
+	return wabi::Rectf(left(), top, right() - left(), h);
 }
 
 void Wave::collisionEnter(Wave *wave)
@@ -104,22 +104,22 @@ void Wave::collisionEnter(Wave *wave)
 	if ((wave->position.x < position.x && wave->right() < position.x) || (wave->position.x > position.x && right() < wave->position.x)) {
 		return;
 	}
-    overlapingWaves.push_back(wave);
-	wave->overlapingWaves.push_back(this); 
+	overlapingWaves.push_back(wave);
+	wave->overlapingWaves.push_back(this);
 }
 
 void Wave::collisionExit(Wave *wave)
 {
-    overlapingWaves.remove(wave);
-    wave->overlapingWaves.remove(this);
+	overlapingWaves.remove(wave);
+	wave->overlapingWaves.remove(this);
 }
 
 void Wave::collisionEnter(Ship *ship)
 {
-    ship->collisionEnter(this);
+	ship->collisionEnter(this);
 }
 
 void Wave::collisionStay(Ship *ship)
 {
-    ship->collisionStay(this);
+	ship->collisionStay(this);
 }

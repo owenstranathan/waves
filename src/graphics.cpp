@@ -52,7 +52,7 @@ void Graphics::draw() const
 	draw(*game->ship);
 
 #if _DEBUG
-	draw(game->collisionSystem);
+	// draw(game->collisionSystem);
 	drawDebugText();
 #endif
 }

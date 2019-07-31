@@ -12,4 +12,5 @@ public:
 	virtual void visit(Sea*) = 0;
 	virtual void visit(Wave*) = 0;
 	virtual void visit(Rock*) = 0;
+	virtual void visit(Platform*) = 0;
 };

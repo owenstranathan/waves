@@ -8,7 +8,8 @@ void PhysicsBody::addForce(const sf::Vector2f &force)
 {
     if (isKinematic)
         return;
-    acceleration += force * game->deltaTime;
+    // acceleration += force * game->deltaTime;
+    velocity += force * game->deltaTime;
 }
 
 void PhysicsBody::update(const float deltaTime)

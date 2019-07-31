@@ -2,6 +2,7 @@
 
 #include "platform.hpp"
 #include "ship.hpp"
+#include "rock.hpp"
 
 Platform::Platform(sf::Vector2f pos, float w, float h) : width(w), height(h)
 {
@@ -24,21 +25,21 @@ void Platform::collisionEnter(Ship *ship)
 	auto myRect = rect();
 	auto shipRect = ship->rect();
 	auto relPos = myRect.center() - ship->position;
-	if (wabi::dot(ship->velocity, wabi::normalized(relPos)) <= 0.f){
+	if (wabi::dot(ship->velocity, wabi::normalized(relPos)) < 0.f){
 		// if velocity will separate us then do nothing
 		return;
 	}
 	wabi::Rectf overlap;
 	myRect.intersects(shipRect, overlap);
-	if (shipRect.bottom() - myRect.top > -0.5f && shipRect.top > myRect.top)
-	{
-		// then we're falling onto the platform
-		ship->velocity.y = 0.f;
-		ship->position.y += overlap.height;
-		ship->addForce(ship->dragForce(10));
-	}
-	else
-	{
+	// if (shipRect.bottom() - myRect.top > -0.5f && shipRect.top > myRect.top)
+	// {
+	// 	// then we're falling onto the platform
+	// 	ship->velocity *= 0.f;
+	// 	ship->position.y += overlap.height;
+	// 	ship->addForce(ship->dragForce(10));
+	// }
+	// else
+	// {
 		// TODO: find the collision normal and the depth of penetration and apply force to that direction (work out proper physics for this)
 		// Probably gonna need some help from Ian
 		auto depthOfPenetration = (float)std::sqrt(std::pow(overlap.right() - overlap.left, 2) + std::pow(overlap.top - overlap.bottom(), 2));
@@ -50,9 +51,14 @@ void Platform::collisionEnter(Ship *ship)
 			restitutionForce = wabi::normalized(restitutionForce) * maxMag;
 		}
 		ship->addForce(restitutionForce);
-	}
+	// }
 }
 
 void Platform::collisionStay(Ship *ship) { collisionEnter(ship); }
 
 void Platform::collisionExit(Ship *) {}
+
+void Platform::collisionEnter(Rock *) { }
+
+void Platform::collisionStay(Rock *rock) { collisionEnter(rock); }
+void Platform::collisionExit(Rock *) {}
