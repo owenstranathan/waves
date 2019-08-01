@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 #include <chrono>
-#include <SFML/Graphics.hpp>
+#include <SFML\Graphics.hpp>
 
 #include "prelude.hpp"
 #include "utils.hpp"
@@ -20,8 +20,7 @@ const float ALMOST_ZERO = 0.01; // close enough
 // const float SEA_LEVEL = 200.f;
 const float SEA_LEVEL = 13.3f;
 
-int main()
-{	
+int main() { 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 100;
     auto videoMode = sf::VideoMode::getDesktopMode();

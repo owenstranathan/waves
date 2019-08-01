@@ -12,11 +12,11 @@
 const float Game::worldWidth = 128; // meters
 const float Game::worldHeight = 72; // meters
 
-Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), ship(new Ship(this, sf::Vector2f(worldWidth / 2 - 10, worldHeight -5.f), 5, 3)),
+Game::Game(float seaLevel) : sea(new Sea(this, seaLevel)), ship(new Ship(this, sf::Vector2f(worldWidth / 2 - 10, worldHeight -1.f), 5, 3)),
 							 collisionSystem(this)
 {
-	platforms.push_back(new Platform(sf::Vector2f(2 * worldWidth / 3, worldHeight/2), 10, worldHeight / 2));
-	// platforms.push_back(new Platform(sf::Vector2f(3 * worldWidth / 6 , 2 * worldHeight/3), 20, 10));
+	// platforms.push_back(new Platform(sf::Vector2f(2 * worldWidth / 3, worldHeight/2), 10, worldHeight / 2));
+	platforms.push_back(new Platform(sf::Vector2f(3 * worldWidth / 6 , worldHeight/3), 20, 10));
 	for (auto && p : platforms) {
 		collisionSystem.addCollidable(p);
 	}

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "game.hpp"
 #include "gravity.hpp"
 #include "physicsbody.hpp"
@@ -9,7 +11,16 @@ void PhysicsBody::addForce(const sf::Vector2f &force)
     if (isKinematic)
         return;
     // acceleration += force * game->deltaTime;
+	if (force.x != 0)
+		std::cout << "fuck";
     velocity += force * game->deltaTime;
+}
+
+float PhysicsBody::impulse(const PhysicsBody& pb) const {
+	float reducedMass = (mass() * pb.mass()) / (mass() + pb.mass());
+	float coefficent = 1 + coefficientOfRestitution;
+	float velocityDiff = wabi::magnitude(velocity) - wabi::magnitude(coefficientOfRestitution * velocity);
+	return reducedMass * coefficent * velocityDiff;
 }
 
 void PhysicsBody::update(const float deltaTime)

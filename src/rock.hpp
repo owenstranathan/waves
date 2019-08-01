@@ -20,7 +20,7 @@ public:
 	virtual void accept(CollisionVisitor&, Collidable*) override;
 	virtual wabi::Rectf rect() const override;
 	virtual void update(const float) override;
-	virtual float mass() override {
+	virtual float mass() const override {
 		return M_PI * radius* radius* density;
 	}
 

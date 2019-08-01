@@ -12,7 +12,7 @@ Platform::Platform(sf::Vector2f pos, float w, float h) : width(w), height(h)
 
 Platform::~Platform() {}
 
-wabi::Rectf Platform::rect() const { return wabi::Rectf(position, sf::Vector2f(width, height)); }
+wabi::Rectf Platform::rect() const { return wabi::Rectf(sf::Vector2f(position.x - width/2, position.y+height/2), sf::Vector2f(width, height)); }
 
 void Platform::accept(Visitor &v) { v.visit(this); };
 
@@ -20,38 +20,31 @@ void Platform::accept(CollisionVisitor &v, Collidable *c) { v.visit(this, c); };
 
 void Platform::collisionEnter(Ship *ship)
 {
-	// This is not the most amazing way for this to work, but it works
-	// and good enough is good enough. Next time use a proper physics engine
-	auto myRect = rect();
+	auto platformRect = rect();
 	auto shipRect = ship->rect();
-	auto relPos = myRect.center() - ship->position;
-	if (wabi::dot(ship->velocity, wabi::normalized(relPos)) < 0.f){
-		// if velocity will separate us then do nothing
-		return;
-	}
 	wabi::Rectf overlap;
-	myRect.intersects(shipRect, overlap);
-	// if (shipRect.bottom() - myRect.top > -0.5f && shipRect.top > myRect.top)
-	// {
-	// 	// then we're falling onto the platform
-	// 	ship->velocity *= 0.f;
-	// 	ship->position.y += overlap.height;
-	// 	ship->addForce(ship->dragForce(10));
-	// }
-	// else
-	// {
-		// TODO: find the collision normal and the depth of penetration and apply force to that direction (work out proper physics for this)
-		// Probably gonna need some help from Ian
-		auto depthOfPenetration = (float)std::sqrt(std::pow(overlap.right() - overlap.left, 2) + std::pow(overlap.top - overlap.bottom(), 2));
-		// auto restitutionForce = mass() * ship->velocity * - overlap.area();
-		auto restitutionForce = mass() * ship->velocity * -depthOfPenetration;
-		// magic ! (you're a wizard harry)
-		 float maxMag = 200.f;
-		if (wabi::squareMagnitude(restitutionForce) > maxMag * maxMag){
-			restitutionForce = wabi::normalized(restitutionForce) * maxMag;
-		}
-		ship->addForce(restitutionForce);
-	// }
+	platformRect.intersects(shipRect, overlap);
+	auto relPos = ship->position - platformRect.center(); // TODO: fix platform position so you don't need rect.center
+	auto normalizedRelPos = wabi::normalized(relPos);
+	auto correction = -1.0f * wabi::normalized(ship->velocity);
+	correction.x *= overlap.width + 0.1;
+	correction.y *= overlap.height + 0.1;
+	ship->position += correction;
+	ship->velocity *= 0.f;
+	relPos = ship->position - platformRect.center(); // TODO: fix platform position so you don't need rect.center
+	normalizedRelPos = wabi::normalized(relPos);
+	sf::Vector2f collisionNormal = normalizedRelPos; // default (colliding corner to corner)
+	if (ship->position.x < platformRect.left || ship->position.x > platformRect.right()) {
+		// On left or right of platform normal becomes (+/- 1, 0)
+		collisionNormal.y = 0.f;
+	}
+	else if (ship->position.y < platformRect.bottom() || ship->position.y > platformRect.top) {
+		// On top or bottom of platform normal becomes (0, +/- 1)
+		collisionNormal.x = 0.f;
+	}
+	auto J = ship->impulse(*this);
+	auto correctiveForce = (J / ship->mass()) * collisionNormal;
+	ship->addForce(correctiveForce);
 }
 
 void Platform::collisionStay(Ship *ship) { collisionEnter(ship); }
